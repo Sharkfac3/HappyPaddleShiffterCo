@@ -4,34 +4,41 @@
 #include <Arduino.h>
 
 // GearSelectorSwitch
-// Reads the Toyota A340 9-pin inhibitor switch (neutral start switch).
+// Reads the Jeep XJ AW4 neutral safety switch (NSS).
 //
-// The factory switch outputs 12V on each position wire — these MUST be
-// converted to 5V logic via voltage dividers before connecting to Arduino:
-//   10kΩ from signal wire → Arduino pin
-//   4.7kΩ from Arduino pin → GND
-//   Result: ~3.8V (safe HIGH for Arduino 5V logic)
+// The AW4 NSS is a CONTINUITY switch — NOT a 12V powered switch.
+// Each selector position closes a specific pair of internal pins.
+// No voltage dividers needed. Wire one side of each pair to an Arduino
+// INPUT_PULLUP pin, the other side to GND. Active LOW logic.
 //
-// Only one position pin should be HIGH at a time. If none are HIGH, the
-// selector is transitioning between positions → UNKNOWN state.
+// '87-'96 connector (8-pin Deutsch, pins A-H):
+//   Park/Neutral : B<->C  → pinPN  (LOW in P and N — cannot distinguish)
+//   Reverse      : A<->E  → pinR
+//   3rd hold     : A<->G  → pin3
+//   1-2 hold     : A<->H  → pin12
+//   Drive        : no continuity → all pins HIGH = Drive
 //
-// justEntered<X>() returns true for exactly one loop cycle on state entry,
-// useful for one-shot actions (e.g. resetting gear to 1st on Park/Reverse).
+// '97-'01 connector: different physical connector, verify pinout from
+// '97-'01 FSM before wiring. Same INPUT_PULLUP / active LOW logic applies.
+//
+// Drive is detected by ABSENCE of signal — no pin reads LOW.
+// UNKNOWN = multiple pins LOW simultaneously (transitioning between positions).
+//
+// justEntered<X>() fires true for exactly one loop cycle on state entry.
 
 enum GearSelectorState {
-    GEAR_SEL_PARK,
-    GEAR_SEL_REVERSE,
-    GEAR_SEL_NEUTRAL,
-    GEAR_SEL_DRIVE,
-    GEAR_SEL_SECOND,
-    GEAR_SEL_LOW,
-    GEAR_SEL_UNKNOWN   // Transitioning — no pin active
+    GEAR_SEL_PARK_NEUTRAL,  // B<->C closed — Park and Neutral share this signal
+    GEAR_SEL_REVERSE,       // A<->E closed
+    GEAR_SEL_DRIVE,         // No continuity — detected by all pins HIGH
+    GEAR_SEL_THIRD,         // A<->G closed — 1st through 3rd only
+    GEAR_SEL_ONE_TWO,       // A<->H closed — 1st and 2nd only
+    GEAR_SEL_UNKNOWN        // Multiple pins LOW — transitioning
 };
 
 class GearSelectorSwitch {
 public:
-    // Pin order: Park, Reverse, Neutral, Drive, Second, Low
-    GearSelectorSwitch(int pinP, int pinR, int pinN, int pinD, int pin2, int pinL);
+    // Pin order: Park/Neutral, Reverse, 3rd hold, 1-2 hold
+    GearSelectorSwitch(int pinPN, int pinR, int pin3, int pin12);
 
     void begin();
 
@@ -41,35 +48,38 @@ public:
     GearSelectorState getState();
 
     // One-shot entry flags — true for exactly one loop cycle on state entry
-    bool justEnteredPark();
+    bool justEnteredParkNeutral();
     bool justEnteredReverse();
-    bool justEnteredNeutral();
     bool justEnteredDrive();
-    bool justEnteredSecond();
-    bool justEnteredLow();
+    bool justEnteredThird();
+    bool justEnteredOneTwo();
 
 private:
-    int _pins[6];   // P, R, N, D, 2, L
+    static const int NUM_PINS = 4;
+    int _pins[NUM_PINS];
 
     GearSelectorState _state;
     GearSelectorState _lastState;
 
-    // Debounce tracking per pin
-    int           _lastReading[6];
-    unsigned long _lastChangeTime[6];
-    bool          _stableHigh[6];
+    int           _lastReading[NUM_PINS];
+    unsigned long _lastChangeTime[NUM_PINS];
+    bool          _stableLow[NUM_PINS];   // true = pin is stably LOW (active)
 
-    // One-shot flags
-    bool _justEnteredPark;
+    bool _justEnteredParkNeutral;
     bool _justEnteredReverse;
-    bool _justEnteredNeutral;
     bool _justEnteredDrive;
-    bool _justEnteredSecond;
-    bool _justEnteredLow;
+    bool _justEnteredThird;
+    bool _justEnteredOneTwo;
 
     static const unsigned long DEBOUNCE_MS = 50;
 
     GearSelectorState resolveState();
 };
+
+// Pin index constants
+#define IDX_PN  0   // Park / Neutral
+#define IDX_R   1   // Reverse
+#define IDX_3   2   // 3rd hold
+#define IDX_12  3   // 1-2 hold
 
 #endif

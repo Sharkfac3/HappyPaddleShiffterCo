@@ -1,97 +1,147 @@
 #include "GearSelectorSwitch.h"
 
-// Pin index constants for readability
-#define IDX_P  0
-#define IDX_R  1
-#define IDX_N  2
-#define IDX_D  3
-#define IDX_2  4
-#define IDX_L  5
+// =============================================================================
+// GearSelectorSwitch.cpp
+//
+// Reads the AW4 neutral safety switch (NSS) and resolves the current
+// selector position into a GearSelectorState enum value.
+//
+// The AW4 NSS is a continuity switch — each selector position closes a
+// specific pair of internal pins. No voltage dividers or 12V power needed.
+// Arduino INPUT_PULLUP pins read LOW when the corresponding pair is closed.
+//
+// Drive is the absence of any signal: all four monitored pins read HIGH.
+// UNKNOWN is the presence of more than one signal simultaneously: this is
+// a transient state that occurs while the selector is physically moving.
+//
+// One-shot justEntered<X>() flags are set for exactly one loop() cycle
+// on each state transition, then cleared on the next update() call.
+// =============================================================================
 
-GearSelectorSwitch::GearSelectorSwitch(int pinP, int pinR, int pinN, int pinD, int pin2, int pinL)
+GearSelectorSwitch::GearSelectorSwitch(int pinPN, int pinR, int pin3, int pin12)
     : _state(GEAR_SEL_UNKNOWN),
       _lastState(GEAR_SEL_UNKNOWN),
-      _justEnteredPark(false),
+      _justEnteredParkNeutral(false),
       _justEnteredReverse(false),
-      _justEnteredNeutral(false),
       _justEnteredDrive(false),
-      _justEnteredSecond(false),
-      _justEnteredLow(false)
+      _justEnteredThird(false),
+      _justEnteredOneTwo(false)
 {
-    _pins[IDX_P] = pinP;
-    _pins[IDX_R] = pinR;
-    _pins[IDX_N] = pinN;
-    _pins[IDX_D] = pinD;
-    _pins[IDX_2] = pin2;
-    _pins[IDX_L] = pinL;
+    // Store pins in index order matching the IDX_* constants
+    _pins[IDX_PN] = pinPN;
+    _pins[IDX_R]  = pinR;
+    _pins[IDX_3]  = pin3;
+    _pins[IDX_12] = pin12;
 
-    for (int i = 0; i < 6; i++) {
-        _lastReading[i]    = LOW;
+    // Default debounce state: treat all pins as HIGH (no continuity / stable)
+    for (int i = 0; i < NUM_PINS; i++) {
+        _lastReading[i]    = HIGH;
         _lastChangeTime[i] = 0;
-        _stableHigh[i]     = false;
+        _stableLow[i]      = false;
     }
 }
 
+// -----------------------------------------------------------------------------
+// begin() — configure pins and snapshot initial state.
+// Must be called once in setup() before any update() calls.
+// -----------------------------------------------------------------------------
 void GearSelectorSwitch::begin() {
-    for (int i = 0; i < 6; i++) {
-        // Plain INPUT — signals come in via voltage dividers, not pulled up internally
-        pinMode(_pins[i], INPUT);
-    }
-    // Sample initial state immediately
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < NUM_PINS; i++) {
+        // INPUT_PULLUP: HIGH = open / no continuity, LOW = NSS pair closed
+        pinMode(_pins[i], INPUT_PULLUP);
+
+        // Snapshot the current reading so debounce tracking starts from reality
         _lastReading[i] = digitalRead(_pins[i]);
-        _stableHigh[i]  = (_lastReading[i] == HIGH);
+
+        // If a pin is already LOW at startup, treat it as immediately stable
+        // (no need to wait DEBOUNCE_MS on power-on — the switch has been settled)
+        _stableLow[i] = (_lastReading[i] == LOW);
     }
+
+    // Resolve and latch initial state so justEntered flags don't fire spuriously
     _state     = resolveState();
     _lastState = _state;
 }
 
+// -----------------------------------------------------------------------------
+// update() — must be called every loop() iteration.
+//
+// Steps:
+//   1. Debounce each pin independently (50ms timestamp method).
+//   2. Resolve the new state from stable pin readings.
+//   3. Compute one-shot justEntered<X>() flags for this cycle.
+// -----------------------------------------------------------------------------
 void GearSelectorSwitch::update() {
     unsigned long now = millis();
 
-    // Debounce each pin independently
-    for (int i = 0; i < 6; i++) {
+    // --- Step 1: Per-pin debounce ---
+    for (int i = 0; i < NUM_PINS; i++) {
         int reading = digitalRead(_pins[i]);
+
+        // If the reading changed from last cycle, reset the timer
         if (reading != _lastReading[i]) {
             _lastChangeTime[i] = now;
             _lastReading[i]    = reading;
         }
+
+        // Only promote to stable once the reading has held for DEBOUNCE_MS
         if ((now - _lastChangeTime[i]) >= DEBOUNCE_MS) {
-            _stableHigh[i] = (reading == HIGH);
+            _stableLow[i] = (reading == LOW);
         }
+        // If still within the debounce window, _stableLow[i] retains its last
+        // promoted value — the pin is considered to be in its previous stable state
+        // until the new reading settles.
     }
 
-    // Resolve new state from stable readings
+    // --- Step 2: Resolve new state ---
     _lastState = _state;
     _state     = resolveState();
 
-    // Update one-shot entry flags
-    _justEnteredPark    = (_state == GEAR_SEL_PARK    && _lastState != GEAR_SEL_PARK);
-    _justEnteredReverse = (_state == GEAR_SEL_REVERSE && _lastState != GEAR_SEL_REVERSE);
-    _justEnteredNeutral = (_state == GEAR_SEL_NEUTRAL && _lastState != GEAR_SEL_NEUTRAL);
-    _justEnteredDrive   = (_state == GEAR_SEL_DRIVE   && _lastState != GEAR_SEL_DRIVE);
-    _justEnteredSecond  = (_state == GEAR_SEL_SECOND  && _lastState != GEAR_SEL_SECOND);
-    _justEnteredLow     = (_state == GEAR_SEL_LOW     && _lastState != GEAR_SEL_LOW);
+    // --- Step 3: One-shot entry flags ---
+    // Each flag is true for exactly one loop() cycle after the state changes.
+    // ArduinoCode.ino consumes them and does NOT need to clear them — they are
+    // automatically reset on the next update() call because _lastState updates.
+    _justEnteredParkNeutral = (_state == GEAR_SEL_PARK_NEUTRAL && _lastState != GEAR_SEL_PARK_NEUTRAL);
+    _justEnteredReverse     = (_state == GEAR_SEL_REVERSE      && _lastState != GEAR_SEL_REVERSE);
+    _justEnteredDrive       = (_state == GEAR_SEL_DRIVE        && _lastState != GEAR_SEL_DRIVE);
+    _justEnteredThird       = (_state == GEAR_SEL_THIRD        && _lastState != GEAR_SEL_THIRD);
+    _justEnteredOneTwo      = (_state == GEAR_SEL_ONE_TWO      && _lastState != GEAR_SEL_ONE_TWO);
 }
 
+// -----------------------------------------------------------------------------
+// resolveState() — maps stable pin readings to a GearSelectorState.
+//
+// Rules:
+//   - More than one pin stably LOW → UNKNOWN (physical transition in progress)
+//   - Exactly one pin LOW          → the matching named position
+//   - No pins LOW                  → DRIVE (detected by absence of signal)
+// -----------------------------------------------------------------------------
 GearSelectorState GearSelectorSwitch::resolveState() {
-    // Priority order: Park > Reverse > Neutral > Drive > Second > Low
-    // Only one should be HIGH at a time under normal operation.
-    // If multiple are HIGH (wiring fault), Park takes priority for safety.
-    if (_stableHigh[IDX_P]) return GEAR_SEL_PARK;
-    if (_stableHigh[IDX_R]) return GEAR_SEL_REVERSE;
-    if (_stableHigh[IDX_N]) return GEAR_SEL_NEUTRAL;
-    if (_stableHigh[IDX_D]) return GEAR_SEL_DRIVE;
-    if (_stableHigh[IDX_2]) return GEAR_SEL_SECOND;
-    if (_stableHigh[IDX_L]) return GEAR_SEL_LOW;
-    return GEAR_SEL_UNKNOWN;
+    // Count how many pins are currently reading as stably LOW
+    int activePins = 0;
+    for (int i = 0; i < NUM_PINS; i++) {
+        if (_stableLow[i]) activePins++;
+    }
+
+    // More than one active simultaneously means the selector is mid-travel
+    if (activePins > 1) return GEAR_SEL_UNKNOWN;
+
+    // Exactly one active — identify which position it corresponds to
+    if (_stableLow[IDX_PN]) return GEAR_SEL_PARK_NEUTRAL;
+    if (_stableLow[IDX_R])  return GEAR_SEL_REVERSE;
+    if (_stableLow[IDX_3])  return GEAR_SEL_THIRD;
+    if (_stableLow[IDX_12]) return GEAR_SEL_ONE_TWO;
+
+    // No pins active — Drive is indicated by the absence of any continuity
+    return GEAR_SEL_DRIVE;
 }
 
-GearSelectorState GearSelectorSwitch::getState() { return _state; }
-
-bool GearSelectorSwitch::justEnteredPark()    { return _justEnteredPark;    }
-bool GearSelectorSwitch::justEnteredReverse() { return _justEnteredReverse; }
-bool GearSelectorSwitch::justEnteredNeutral() { return _justEnteredNeutral; }
-bool GearSelectorSwitch::justEnteredDrive()   { return _justEnteredDrive;   }
-bool GearSelectorSwitch::justEnteredSecond()  { return _justEnteredSecond;  }
-bool GearSelectorSwitch::justEnteredLow()     { return _justEnteredLow;     }
+// -----------------------------------------------------------------------------
+// Public accessors — all trivial, documented in header
+// -----------------------------------------------------------------------------
+GearSelectorState GearSelectorSwitch::getState()           { return _state; }
+bool GearSelectorSwitch::justEnteredParkNeutral()          { return _justEnteredParkNeutral; }
+bool GearSelectorSwitch::justEnteredReverse()              { return _justEnteredReverse; }
+bool GearSelectorSwitch::justEnteredDrive()                { return _justEnteredDrive; }
+bool GearSelectorSwitch::justEnteredThird()                { return _justEnteredThird; }
+bool GearSelectorSwitch::justEnteredOneTwo()               { return _justEnteredOneTwo; }
