@@ -30,7 +30,7 @@ NSS wiring detail — see [`SYSTEM.md`](SYSTEM.md).
 | WaveShare 1.5″ RGB OLED | SSD1351 driver, 128×128 — **3.3V only, 5V will destroy it** |
 | Relay or high-side driver board | One channel per solenoid. Never drive solenoids directly from Arduino pins. |
 | 1N4007 flyback diodes | One across each solenoid coil — protects the driver board |
-| Paddle switches ×2 | Normally-open momentary. Wire one terminal to GND, other to Arduino pin. |
+| Omron D2F-5L microswitch ×2 | Normally-open momentary. Wire one terminal to GND, other to Arduino pin. |
 
 ### Libraries (install via `Tools → Manage Libraries`)
 | Library | Purpose |
