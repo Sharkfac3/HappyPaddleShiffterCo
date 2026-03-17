@@ -77,13 +77,36 @@ static const unsigned long DEBOUNCE_MS = 50;
   — there is no priority chain; any multi-pin state is treated as a transient
 - `justEntered<X>()` flags auto-clear on the next `update()` call; ArduinoCode.ino does not need to reset them
 
+## Behavioral Consequence in ArduinoCode.ino
+
+**`GEAR_SEL_PARK_NEUTRAL` — gear is PRESERVED, solenoids off.**
+
+When `justEnteredParkNeutral()` fires, `ArduinoCode.ino` calls `solenoids.allOff()` but
+does **not** reset `currentGear`. When the selector returns to Drive, `justEnteredDrive()`
+re-applies solenoids at the preserved gear.
+
+**Why:** The physical selector gate is P → R → N → D. To engage the transfer case low
+range (4WD Low), the driver must move through Neutral. Resetting to 1st on every Neutral
+entry would always drop the transmission back to 1st on the transfer case return to Drive.
+Preserving the gear means the driver resumes exactly where they left off.
+
+**Startup exception:** `applyState()` (called once in `setup()`) does initialise
+`currentGear = 1` for the `GEAR_SEL_PARK_NEUTRAL` case — there is no previous gear to
+preserve at power-on.
+
+**Reverse (`GEAR_SEL_REVERSE`) still resets to 1.** Reverse always requires the vehicle
+to be stopped; resetting to 1st is correct when returning from Reverse to Drive.
+
+**Important:** Do NOT add `currentGear = 1` to the `justEnteredParkNeutral()` handler.
+This was the original bug — it caused gear loss on transfer case operations.
+
 ## Usage Pattern in ArduinoCode.ino
 
 ```cpp
 selector.update();
 
 if (selector.justEnteredDrive()) {
-    // Runs once on transition into Drive
+    // Re-applies solenoids at the preserved currentGear — correct after Neutral
 }
 
 switch (selector.getState()) {

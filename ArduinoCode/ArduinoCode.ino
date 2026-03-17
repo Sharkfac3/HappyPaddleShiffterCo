@@ -120,10 +120,17 @@ void loop() {
     // -------------------------------------------------------------------------
 
     if (selector.justEnteredParkNeutral()) {
-        currentGear = 1;
+        // Do NOT reset currentGear — gear is preserved through Neutral so that
+        // Drive re-entry resumes at the same gear. This supports transfer case
+        // operations (D → N → work lever → D) without losing your place.
+        // Park and Neutral share the same NSS signal (B↔C) and cannot be
+        // distinguished — both positions behave identically here.
+        // NOTE: applyState() at power-on still initialises currentGear = 1
+        // (no previous gear exists at startup).
         solenoids.allOff();
         screen.showPark();  // P covers both Park and Neutral
-        Serial.println("-> PARK/NEUTRAL | gear reset to 1 | solenoids off");
+        Serial.print("-> PARK/NEUTRAL | solenoids off | gear preserved at ");
+        Serial.println(currentGear);
         return;
     }
 

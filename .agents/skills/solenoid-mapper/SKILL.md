@@ -65,5 +65,10 @@ void allOff();               // De-energises all three solenoids — used for P/
 solenoids.begin();          // In setup() — safe startup state
 
 solenoids.applyGear(currentGear);   // On any gear change
-solenoids.allOff();                 // On entering P, R, or N
+solenoids.allOff();                 // On entering P, R, or N (solenoids off in all three)
 ```
+
+> **Note on Neutral:** `allOff()` is called when entering Neutral, but `currentGear` is
+> **preserved** (not reset). When the selector returns to Drive, `applyGear(currentGear)`
+> restores the previous gear. Do not assume P, R, and N are identical in the state machine —
+> only their solenoid output is the same. See `gear-selector-switch` skill and `SYSTEM.md`.

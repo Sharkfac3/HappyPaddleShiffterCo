@@ -107,17 +107,35 @@ Sources: MaxxECU A340E wiring docs + EveryCircuit AW4 community build. See [`SOU
 
 ## State Machine
 
-| Selector State | Display | Solenoids | Paddle Shifting | Gear Reset |
+| Selector State | Display | Solenoids | Paddle Shifting | currentGear |
 |---|---|---|---|---|
-| PARK / NEUTRAL | P | all off | disabled | → 1 |
+| PARK / NEUTRAL | P | all off | disabled | **preserved** (startup: 1) |
 | REVERSE | R | all off | disabled | → 1 |
 | DRIVE | 1 / 2 / 3 / 4 / 4L | per solenoid map | enabled | — |
-| 3RD HOLD | N* | clamp currentGear to ≤3, per map | disabled | — |
-| 1-2 HOLD | 2 | clamp currentGear to ≤2, per map | disabled | — |
+| 3RD HOLD | N* | clamp currentGear to ≤3, per map | disabled | clamped if > 3 |
+| 1-2 HOLD | 2 | clamp currentGear to ≤2, per map | disabled | clamped if > 2 |
 | UNKNOWN | blank | hold last state | disabled | — |
 
 > \* 3RD HOLD currently calls `showNeutral()` as a placeholder — displays "N" not "3".
 > See the `screen-indication` skill for instructions on adding `showThird()`.
+
+### Transfer Case Operation
+
+The physical selector gate is **P → R → N → D**. Engaging 4WD Low requires the vehicle
+to be stopped and the selector moved to Neutral while the transfer case lever is worked.
+
+Expected sequence: **Drive → Neutral → (work lever) → Drive**
+
+`currentGear` is preserved through Neutral. When the selector returns to Drive,
+`justEnteredDrive()` re-applies `solenoids.applyGear(currentGear)` at the gear that was
+active before Neutral — no gear is lost.
+
+> **Do NOT reset `currentGear` in the `justEnteredParkNeutral()` handler.** This was the
+> original bug. The startup-only path (`applyState()`) initialises to 1 because there is
+> no previous gear at power-on — that reset is correct and intentional only there.
+>
+> **Reverse resets to 1 (this is correct).** Reverse always requires a full stop.
+> Resetting to 1st ensures 1st gear is always engaged when returning from Reverse to Drive.
 
 ---
 
