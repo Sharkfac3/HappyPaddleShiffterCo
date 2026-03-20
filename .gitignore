@@ -1,1 +1,24 @@
+# Claude Code local settings
 .claude/
+
+# Arduino build artifacts
+build/
+.cache/
+*.elf
+*.hex
+*.bin
+*.map
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
