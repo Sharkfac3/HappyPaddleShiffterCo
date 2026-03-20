@@ -19,6 +19,39 @@ Status values:
 
 ## Active Tasks
 
+## [PENDING] — Update paddle 3D model documentation for D2JW-01K11 geometry
+
+**From:** RESEARCH
+**To:** DOCUMENTATION
+**Task:** D2JW-01K11 is now the formally selected paddle switch (replacing D2F-5L).
+Update `Models/README.md` and any paddle body STL design notes with the confirmed
+mechanical dimensions from the Omron datasheet.
+
+**Switch body dimensions (from Omron datasheet, human-verified 2026-03-20):**
+- Body: 12.7 mm wide × 12.3 mm tall × 5.3 ± 0.1 mm deep
+- Mounting holes: 2.35 mm dia., spaced 3.95 × 3.95 mm
+- Lever: stainless steel t0.3 mm, R16.5 mm arc
+
+**Travel / actuation geometry:**
+- Operating Position (OP): 8.4 ± 0.8 mm (lever tip travel to actuation point)
+- Pretravel: 6.4 mm max
+- Overtravel: 1.4 mm min
+- Movement Differential: 0.7 mm max
+- OP measurement arm height: 6.15 mm above body base
+
+**Mounting:**
+- Chassis mount — switch body screws to paddle body (not PCB through-hole)
+- Termination: solder lug — short wire leads run from switch to PCB/Arduino
+
+**Notes for 3D model:**
+- Switch pocket must place lever tip 8.4 mm from the paddle contact surface
+  (1.6 mm deeper than the former D2F-5L pocket at 6.8 mm)
+- D2F-5L and D2JW-01K11 are NOT dimensionally interchangeable
+- Full mechanical drawing dimensions logged in SOURCES.md under
+  "Paddle Switch Alternative — Omron D2JW-01K11 / Mechanical Drawing"
+
+---
+
 ## [PENDING] — Verify 1997–2001 AW4 NSS connector pinout from primary source
 
 **From:** DOCUMENTATION
@@ -55,7 +88,9 @@ If no primary source is found, escalate as `[ESCALATION NEEDED]` with sources at
 
 ## Completed Tasks
 
-_Completed handoffs will be recorded here for traceability._
+| Task | Completed | Notes |
+|---|---|---|
+| Confirm D2JW lever-actuator variant part number | 2026-03-20 | D2JW-01K11 selected as primary — straight lever, 82 gf, IP67, 100K electrical life. Full mechanical dimensions logged in SOURCES.md. |
 
 ---
 
