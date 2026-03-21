@@ -19,7 +19,34 @@ Status values:
 
 ## Active Tasks
 
-## [PENDING] — Update paddle 3D model documentation for D2JW-01K11 geometry
+## [PENDING] — Confirm paddle switch mounting fastener spec and print settings for Models/README.md
+
+**From:** DOCUMENTATION
+**To:** RESEARCH
+**Task:** Two items in `Models/README.md` are marked [UNVERIFIED] and need confirmed values
+before the document can be published as authoritative.
+
+**Item 1 — Mounting screw spec:**
+The D2JW-01K11 has 2.35 mm diameter mounting holes spaced 3.95 × 3.95 mm. The current
+placeholder is "M2 × 6 mm, countersunk or pan head." Confirm:
+- Correct thread size (M2 vs M2.5 vs imperial)
+- Correct head type for the printed paddle body pocket
+- Recommended length given expected boss depth
+
+**Item 2 — Print settings:**
+No tested print settings exist for the paddle body STL files. Confirm and document:
+- Recommended material (PETG vs ABS vs other)
+- Layer height, infill %, perimeter count
+- Orientation recommendation (which face down)
+- Whether supports are required and where
+
+**Output:** Drop confirmed values in a follow-up HANDOFFS entry addressed to DOCUMENTATION
+so `Models/README.md` can be updated. Log any datasheet or manufacturer sources in
+`SOURCES.md`.
+
+---
+
+## [DONE] — Update paddle 3D model documentation for D2JW-01K11 geometry
 
 **From:** RESEARCH
 **To:** DOCUMENTATION
@@ -91,6 +118,7 @@ If no primary source is found, escalate as `[ESCALATION NEEDED]` with sources at
 | Task | Completed | Notes |
 |---|---|---|
 | Confirm D2JW lever-actuator variant part number | 2026-03-20 | D2JW-01K11 selected as primary — straight lever, 82 gf, IP67, 100K electrical life. Full mechanical dimensions logged in SOURCES.md. |
+| Update paddle 3D model documentation for D2JW-01K11 geometry | 2026-03-20 | Models/README.md rewritten with full switch BOM, D2JW-01K11 body/actuation dimensions, switch pocket depth rule (8.4 mm), mounting method, assembly steps, and alternatives table. Fastener spec and print settings flagged UNVERIFIED — new PENDING handoff raised to RESEARCH. |
 
 ---
 
