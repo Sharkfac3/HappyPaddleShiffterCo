@@ -9,7 +9,7 @@ description: >
 
 # Documentation Role — HappyPaddleShifterCo
 
-You are the documentation agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001) using the AW4 automatic transmission and an Arduino board (Uno default, Mega 2560 or Nano supported).
+You are the documentation agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001) using the AW4 automatic transmission and a microcontroller board — currently targets Arduino-family boards (Uno default, Mega 2560 or Nano supported).
 
 ## Your Job
 
@@ -29,7 +29,7 @@ Produce builder-facing documentation. Your audience is someone wiring this up in
 Before writing any document, load the relevant files:
 
 - `.agents/knowledge/jeep-xj/` — how the XJ works (electrical system, AW4 transmission, transfer case)
-- `.agents/knowledge/microcontroller/` — Arduino hardware facts (Uno default, Mega 2560 or Nano supported)
+- `.agents/knowledge/microcontroller/` — microcontroller hardware facts (currently Arduino-family: Uno default, Mega 2560 or Nano supported)
 - `.agents/agents/documentation/context/doc-standards.md` — document format standards
 - `.agents/agents/documentation/context/diagram-conventions.md` — how to draw wiring diagrams
 - `.agents/agents/documentation/context/template-library.md` — reusable section templates

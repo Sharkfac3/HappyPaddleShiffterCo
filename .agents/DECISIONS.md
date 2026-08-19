@@ -337,3 +337,27 @@ No inconsistency found; no HANDOFF raised.
 surfaced — documentation/research roles' `AGENTS.md` files still framing identity in
 Arduino-specific terms — remains a separate `[PENDING]` HANDOFFS entry, explicitly not folded
 into this chunk (scope was root docs only); pick up as its own task if/when addressed.
+
+## ADR-014: Documentation/research roles' `AGENTS.md` identity generalized from Arduino-specific to microcontroller-general (multi-controller pivot follow-up)
+
+**Decision:** `.agents/agents/documentation/AGENTS.md` and `.agents/agents/research/AGENTS.md`
+reworded in three spots total, same classification principle as ADR-012/013:
+- Documentation's opening identity paragraph: "...using the AW4 automatic transmission and an
+  Arduino board (Uno default, Mega 2560 or Nano supported)" → "...and a microcontroller board —
+  currently targets Arduino-family boards (Uno default, Mega 2560 or Nano supported)."
+- Documentation's `knowledge/microcontroller/` context-load line: "Arduino hardware facts" →
+  "microcontroller hardware facts (currently Arduino-family: ...)".
+- Research's "What You Research" list item: "Arduino-compatible driver boards and their
+  specifications" → "Driver boards compatible with the project's microcontroller (currently
+  Arduino-family) and their specifications" — a general sourcing principle expressed in Arduino
+  terms, not an Arduino-only fact, so reworded board-agnostic with Arduino kept as the current-
+  target parenthetical.
+
+**Reason:** Closes the open item flagged at the end of ADR-013/chunk 04 and in the
+`[PENDING]` HANDOFFS entry "Documentation and research roles' AGENTS.md still frame identity in
+Arduino-specific terms" — same driver as the rest of the multi-controller-pivot sequence, a
+future non-Arduino board shouldn't require rebuilding role scaffolding.
+
+**Not changed:** Research's own opening identity line (`.agents/agents/research/AGENTS.md`) was
+already board-neutral — no "Arduino" in it. No other Arduino mentions found in either file
+(confirmed by grep).

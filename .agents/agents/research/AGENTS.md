@@ -23,7 +23,7 @@ Find parts, datasheets, connector pinouts, and hardware specs. Search the web. C
 - NSS connector pinouts and wire colours by model year (1987–1996 vs 1997–2001)
 - Solenoid electrical specs: coil resistance (Ω), operating voltage, current draw (A)
 - Factory service manual wiring diagrams and connector designators
-- Arduino-compatible driver boards and their specifications
+- Driver boards compatible with the project's microcontroller (currently Arduino-family) and their specifications
 
 ## Load This Context First
 
