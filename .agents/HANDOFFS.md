@@ -392,7 +392,7 @@ If no primary source is found, escalate as `[ESCALATION NEEDED]` with sources at
 
 ## Escalations Awaiting Human Input
 
-### [RESOLVED 2026-08-19] — Duplicate, diverging role-config files: `AGENT.md` vs `AGENTS.md` per role
+### [RESOLVED 2026-08-19, superseded same day] — Duplicate, diverging role-config files: `AGENT.md` vs `AGENTS.md` per role
 
 **Resolution:** Not orphaned — `humans/start-*-role.md` explicitly route to `AGENTS.md` for a
 second tool ("Pi"), so both files are live and must be kept in sync manually. Synced content
@@ -401,6 +401,37 @@ wording) rather than deleting either file. See the "Generalize `.agents/knowledg
 handoff above. The dual-file-drift risk itself is not eliminated — a future change to one still
 needs a matching edit to the other — but that's a tooling-convention decision for the human
 operator, not something to guess at.
+
+**Superseded below** — the "sync, don't delete" patch was flagged by the human operator as not
+actually closing the drift risk. Re-escalated and resolved for real as part of the
+multi-controller-pivot scaffolding generalization (see
+`humans/multi-controller-pivot/01-resolve-agent-agents-duplication.md`).
+
+### [RESOLVED 2026-08-19] — AGENT.md/AGENTS.md merged into a single AGENTS.md per role
+
+**Raised by:** Human operator (Sharkfac3), during multi-controller-pivot chunk 01.
+
+**Decision, from the human operator:** Pi (the second consuming tool) is still in active use.
+Web research confirmed `AGENTS.md` (plural) is Pi's actual, real convention — an open format
+adopted by 20,000+ repos, and Pi also layers in `CLAUDE.md` alongside it. The singular
+`AGENT.md` filename was never any external tool's convention — it was invented by this
+project's own scaffolding. Human operator's call: merge into one file, named for what Pi
+actually expects.
+
+**Resolution:** Deleted `AGENT.md` in all three role folders
+(`.agents/agents/{coding,documentation,research}/`). Each role now has exactly one role-config
+file, `AGENTS.md`, containing the (already-fixed, more current) content that previously lived
+in the plural file, with the original YAML frontmatter (`name`/`description`) restored on top.
+Updated every pointer that referenced the singular file:
+- Root `CLAUDE.md` and root `AGENTS.md` — Agent Roles table now points to `AGENTS.md` per role.
+- `.agents/WORKFLOW.md` step 4 ("Load the role's `AGENTS.md`").
+- `humans/start-coding-role.md`, `start-documentation-role.md`, `start-research-role.md` —
+  step 2 simplified to a single read, no more "(Claude) / (Pi)" split.
+
+This eliminates the drift risk structurally (one file, not two kept in sync) rather than just
+patching content, closing out the escalation for real this time.
+
+---
 
 ### [ESCALATION NEEDED — original text below, kept for record] — Duplicate, diverging role-config files: `AGENT.md` vs `AGENTS.md` per role
 

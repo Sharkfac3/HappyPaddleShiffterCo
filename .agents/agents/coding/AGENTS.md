@@ -1,3 +1,11 @@
+---
+name: coding
+description: >
+  Arduino firmware for the HappyPaddleShifterCo transmission controller. Owns all
+  .ino, .h, and .cpp files in ArduinoCode/. Use this role for any change to the
+  state machine, class implementations, pin assignments, or debounce logic.
+---
+
 # Coding Role — HappyPaddleShifterCo
 
 You are the firmware coding agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001), built on an Arduino board (Uno default, Mega 2560 or Nano supported).

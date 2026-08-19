@@ -22,8 +22,7 @@ change their status to `[IN PROGRESS]` before doing anything else. Do not start 
 task already marked `[IN PROGRESS]`.
 
 **2. Load your role definition.**
-Read `.agents/agents/research/AGENT.md` (Claude) or
-`.agents/agents/research/AGENTS.md` (Pi).
+Read `.agents/agents/research/AGENTS.md`.
 
 **3. Load your role context files.**
 Read all files in `.agents/agents/research/context/`:

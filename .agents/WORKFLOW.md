@@ -71,7 +71,7 @@ A documentation typo may go directly to Documentation.
    Change the status to `[IN PROGRESS]` before starting work.
    Do not start a task already marked `[IN PROGRESS]` — it is being handled.
 3. Run the Task Triage above to confirm which role you are playing.
-4. Load the role's `AGENT.md`.
+4. Load the role's `AGENTS.md`.
 5. Load the relevant sections of `.agents/knowledge/`.
 6. Check `.agents/DECISIONS.md` before making any architectural choice.
 

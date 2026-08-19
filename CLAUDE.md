@@ -15,13 +15,13 @@ The repository contains firmware, 3D-printable paddle hardware, and PCB schemati
 ## Agent Roles
 
 Three specialist roles operate on this project. When starting a task, identify which role applies
-and load its `AGENT.md` before doing any work.
+and load its `AGENTS.md` before doing any work.
 
-| Role | AGENT.md | Responsible for |
+| Role | AGENTS.md | Responsible for |
 |---|---|---|
-| **Documentation** | `.agents/agents/documentation/AGENT.md` | Wiring diagrams, pinout tables, install guides, print settings |
-| **Coding** | `.agents/agents/coding/AGENT.md` | Arduino firmware — `.ino`, `.h`, `.cpp` files |
-| **Research** | `.agents/agents/research/AGENT.md` | Part numbers, datasheets, source verification, web research |
+| **Documentation** | `.agents/agents/documentation/AGENTS.md` | Wiring diagrams, pinout tables, install guides, print settings |
+| **Coding** | `.agents/agents/coding/AGENTS.md` | Arduino firmware — `.ino`, `.h`, `.cpp` files |
+| **Research** | `.agents/agents/research/AGENTS.md` | Part numbers, datasheets, source verification, web research |
 
 A task may need more than one role. Complete the roles sequentially; use `.agents/HANDOFFS.md` to
 pass work between them.
