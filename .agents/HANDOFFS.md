@@ -19,6 +19,21 @@ Status values:
 
 ## Active Tasks
 
+## [DONE] — Multi-controller pivot chunk 02: rename vendor-scoped folders
+
+**From:** Human operator (Sharkfac3), multi-controller-pivot sequence
+**To:** N/A (structural, cross-cutting)
+
+**Resolution (2026-08-19):** `ArduinoCode/` → `Firmware/`, `.agents/knowledge/arduino/` →
+`.agents/knowledge/microcontroller/`, both via `git mv` (names confirmed by human operator
+first, not guessed). Every live reference across the repo updated to match; `scripts/generate_bom.py`
+re-run to confirm it still works (regenerated `BOM.xlsx`). Historical HANDOFFS.md/DECISIONS.md
+entries and the `humans/multi-controller-pivot/` chunk prompt files were left referencing the
+old names deliberately — accurate history, not live pointers. Full details in `.agents/DECISIONS.md`
+ADR-011. Commit `91bffe3`.
+
+Chunk 03 (`humans/multi-controller-pivot/03-reframe-coding-role-identity.md`) can now start.
+
 ## [DONE] — Fix stale board/pin references in coding-role-owned files
 
 **From:** DOCUMENTATION (drift audit)
