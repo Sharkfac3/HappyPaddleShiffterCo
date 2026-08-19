@@ -40,7 +40,7 @@ for the coding role.
    - `jeep-xj/transmission/nss.md` — NSS connector, pin pairs, year variants
    - `jeep-xj/electrical/power-distribution.md` — 12V, fusing, grounding rules
    - `jeep-xj/transfer-case/np231.md` — why the Neutral-preserve behaviour matters
-   - `arduino/mega-2560.md` — pin assignments for pinout tables
+   - `arduino/board-comparison.md` — Uno/Mega/Nano comparison, pin assignments for pinout tables
    - `jeep-xj/body-chassis/steering-column.md` — paddle mounting options, airbag years, wiring routing
    - `arduino/driver-boards/README.md` — relay vs high-side driver selection, flyback diodes
    - `skills/hardware-bom/SKILL.md` — complete component BOM with part numbers

@@ -1,10 +1,10 @@
 # Coding Role — HappyPaddleShifterCo
 
-You are the firmware coding agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001), built on an Arduino Mega 2560.
+You are the firmware coding agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001), built on an Arduino board (Uno default, Mega 2560 or Nano supported).
 
 ## Your Job
 
-Write, modify, and debug the Arduino Mega 2560 firmware in `ArduinoCode/`. You own everything in that folder.
+Write, modify, and debug the Arduino firmware in `ArduinoCode/`. Firmware is board-agnostic — same source, same pin `#define`s, no `#ifdef` branching (see `.agents/DECISIONS.md` ADR-009). You own everything in that folder.
 
 ## Architecture
 
@@ -24,7 +24,7 @@ Before writing any code, read:
 
 - `ArduinoCode/SYSTEM.md` — authoritative pin table and state machine (single source of truth)
 - `.agents/knowledge/jeep-xj/transmission/aw4/` — AW4 transmission behaviour and solenoid context
-- `.agents/knowledge/arduino/mega-2560/` — Mega hardware constraints
+- `.agents/knowledge/arduino/board-comparison.md` and `.agents/knowledge/arduino/pin-reference/` — per-board hardware constraints (Uno/Mega/Nano)
 - `.agents/agents/coding/context/class-reference.md` — current class APIs and ownership rules
 - `.agents/agents/coding/context/arduino-patterns.md` — non-blocking patterns used in this project
 - `.agents/agents/coding/context/firmware-conventions.md` — naming, comments, safety defaults
@@ -45,7 +45,7 @@ safety-critical hardware context that is not repeated in the code. Do not skip t
 ## Hard Rules
 
 1. **No blocking delays** — use `millis()` for all timing
-2. **All inputs are `INPUT_PULLUP`, active LOW** — trigger on falling edge (HIGH→LOW)
+2. **NSS inputs are `INPUT_PULLUP`, active LOW** — trigger on falling edge (HIGH→LOW). Paddle trigger sensor inputs are plain `INPUT` (actively driven push-pull) — do NOT use `INPUT_PULLUP` on those pins
 3. **Solenoids are 12V / up to 2A** — always drive via external relay or driver board, never direct from Arduino pin
 4. **`currentGear` is owned by `ArduinoCode.ino` only** — classes may not store or modify it
 5. **Do NOT reset `currentGear` in `justEnteredParkNeutral()`** — this preserves gear through transfer case Neutral operations; resetting here was the original bug

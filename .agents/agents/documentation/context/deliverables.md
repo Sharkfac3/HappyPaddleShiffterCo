@@ -9,7 +9,7 @@ Status tracker and specification for every documentation deliverable this role o
 **Status:** Complete (initial version)
 **Purpose:** Getting-started guide for builders flashing the firmware.
 **Must include:**
-- Required hardware list (Arduino Mega 2560, relay/driver board, SSD1351 display, switches)
+- Required hardware list (Arduino — Uno default, Mega 2560 or Nano supported —, relay/driver board, SSD1351 display, IR slot-type optocoupler paddle trigger sensors)
 - Arduino IDE library dependencies (Adafruit_SSD1351, Adafruit_GFX)
 - Flash instructions (open .ino, select board, select port, upload)
 - Serial monitor expected output at startup
@@ -23,10 +23,10 @@ Status tracker and specification for every documentation deliverable this role o
 **Purpose:** Complete wiring reference for the build.
 **Must include:**
 - Full system wiring diagram (ASCII or table) covering:
-  - Arduino Mega → NSS connector (all 4 signal pins)
-  - Arduino Mega → paddle switches (2 pins)
-  - Arduino Mega → relay/driver board → solenoids (3 channels)
-  - Arduino Mega → SSD1351 display (5 wires)
+  - Arduino (Uno/Mega/Nano) → NSS connector (all 4 signal pins)
+  - Arduino (Uno/Mega/Nano) → paddle trigger sensors (2× 3 pins)
+  - Arduino (Uno/Mega/Nano) → relay/driver board → solenoids (3 channels)
+  - Arduino (Uno/Mega/Nano) → SSD1351 display (5 wires)
   - Power and ground distribution
 - Connector pinout for the AW4 NSS (8-pin Deutsch, '87-'96 and '97-'01 variants)
 - Relay/driver board wiring notes (flyback diodes, 12V supply)
@@ -70,5 +70,5 @@ Signal names use the format: `COMPONENT — SIGNAL (direction from Arduino)`.
 Example:
 | From | Pin / Terminal | To | Pin / Terminal | Notes |
 |---|---|---|---|---|
-| Arduino Mega | Pin 4 INPUT_PULLUP | AW4 NSS | Pin B | Park/Neutral — active LOW |
-| Arduino Mega | Pin 11 OUTPUT | Driver Board | CH1 IN | S1 solenoid control |
+| Arduino | Pin 4 INPUT_PULLUP | AW4 NSS | Pin B | Park/Neutral — active LOW |
+| Arduino | Pin A0 OUTPUT | Driver Board | CH1 IN | S1 solenoid control |

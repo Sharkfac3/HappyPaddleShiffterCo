@@ -9,18 +9,19 @@
 // ScreenIndication
 // Wraps the WaveShare 1.5" 128x128 RGB OLED display (SSD1351 driver chip).
 //
-// Uses hardware SPI on the Arduino Mega 2560:
-//   Display DIN  → Arduino Mega pin 51 (MOSI) — hardware SPI, fixed, not reassignable
-//   Display CLK  → Arduino Mega pin 52 (SCK)  — hardware SPI, fixed, not reassignable
-//   Display CS   → Arduino Mega pin 44 (digital output, active LOW)
-//   Display DC   → Arduino Mega pin 45 (digital output, HIGH=data LOW=command)
-//   Display RES  → Arduino Mega pin 46 (digital output, LOW=reset)
+// Uses hardware SPI. Supports Arduino Uno (default), Mega 2560, and Nano —
+// the Adafruit_SSD1351 library auto-selects the board's fixed MOSI/SCK pins,
+// no code change needed between boards:
+//   Display DIN  → hardware MOSI (Uno/Nano pin 11 / Mega pin 51) — fixed, not reassignable
+//   Display CLK  → hardware SCK  (Uno/Nano pin 13 / Mega pin 52) — fixed, not reassignable
+//   Display CS   → A5 (digital output, active LOW)
+//   Display DC   → A4 (digital output, HIGH=data LOW=command)
+//   Display RES  → A3 (digital output, LOW=reset)
 //   Display VCC  → 3.3V ONLY  (do NOT use 5V — will damage the OLED)
 //   Display GND  → GND
 //
-// IMPORTANT: CS, DC, and RST must be proper digital output pins.
-// Do NOT use analog-only pins (A0–A15) for these — they will not work
-// reliably as SPI control lines on the Mega.
+// IMPORTANT: CS, DC, and RST must be proper digital output pins. A3-A5 work
+// fine as digital outputs on both Uno and Mega (same technique used here).
 //
 // Library: Adafruit_SSD1351 (install via Arduino Library Manager)
 // Depends on: Adafruit_GFX
@@ -38,6 +39,12 @@
 
 #define SCREEN_WIDTH  128
 #define SCREEN_HEIGHT 128
+
+// Adafruit_SSD1351 library does not ship BLACK/WHITE constants under a
+// SSD1351_ prefix (only unprefixed BLACK/WHITE in its own example sketch).
+// Defined here to avoid colliding with other libraries' color macros.
+#define SSD1351_BLACK 0x0000
+#define SSD1351_WHITE 0xFFFF
 
 class ScreenIndication {
 public:
@@ -57,9 +64,9 @@ public:
 
 private:
     Adafruit_SSD1351 _tft;
-    String _lastDisplayed;
+    char _lastDisplayed[3];  // Max displayed value is "4L" + null terminator
 
-    void renderText(const String& text, uint16_t color);
+    void renderText(const char* text, uint16_t color);
 };
 
 #endif

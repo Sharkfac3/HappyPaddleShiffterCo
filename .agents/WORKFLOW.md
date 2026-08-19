@@ -152,7 +152,8 @@ drop a HANDOFF to the owning role instead.
 | `.agents/knowledge/jeep-xj/electrical/` | **Research** |
 | `.agents/knowledge/jeep-xj/transfer-case/` | **Research** |
 | `.agents/knowledge/jeep-xj/body-chassis/` | **Documentation** |
-| `.agents/knowledge/arduino/mega-2560/` | **Coding** |
+| `.agents/knowledge/arduino/board-comparison.md` | **Coding** |
+| `.agents/knowledge/arduino/pin-reference/` | **Coding** |
 | `.agents/knowledge/arduino/driver-boards/` | **Coding** |
 | `.agents/knowledge/jeep-xj/overview.md` | **Research** |
 

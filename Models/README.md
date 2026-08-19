@@ -1,8 +1,14 @@
 # Models — Paddle Shifter Hardware
 
 > **Applies to:** HappyPaddleShifterCo — Jeep XJ Cherokee AW4 paddle shifter controller
-> **Last verified:** 2026-03-20
+> **Last verified:** 2026-08-17
 > **Related files:** `ArduinoCode/SYSTEM.md` (pin assignments), `Schematics/README.md` (wiring), `SOURCES.md` (component sources)
+>
+> **2026-08-17: Paddle trigger sensor changed.** This document previously covered the Omron
+> D2JW-01K11 mechanical switch. The project has moved to an IR slot-type optocoupler sensor
+> to eliminate mechanical wear — see [Sensor Detail](#sensor-detail--ir-slot-type-optocoupler)
+> below. **The switch pocket geometry described in the old version of this doc no longer
+> applies** — a slot-type geometry is needed instead, and that redesign is not yet done.
 
 3D-printable STL files for the physical paddle hardware — the left and right paddles that
 mount to the steering wheel and actuate the gear shift switches.
@@ -25,78 +31,67 @@ are per paddle; the full build requires two paddles (left and right).
 
 | Qty per Paddle | Qty Total (2 paddles) | Description | Specification | Part Number | Notes |
 |---|---|---|---|---|---|
-| 1 | 2 | Paddle switch | Omron D2JW-01K11, SPDT N/O momentary, straight lever, IP67, 30 VDC / 100 mA, chassis mount, solder lug termination | **Omron D2JW-01K11** | Selected switch. Chassis-mounts directly to paddle body. NOT interchangeable with D2F-5L — pocket geometry differs. See [Switch Detail](#switch-detail--omron-d2jw-01k11) below. |
-| 2 | 4 | Switch mounting screw | M2 × 6 mm, countersunk or pan head | [UNVERIFIED — confirm before purchasing] | Matches 2.35 mm mounting holes in D2JW-01K11 body. Confirm thread and length against printed pocket depth before ordering. |
-| — | — | Wire leads | Lightweight hookup wire, 26–28 AWG | — | Short runs from switch solder lugs to PCB or Arduino. Exact length depends on routing in your steering column. See `Schematics/README.md` for wiring. |
+| 1 | 2 | Paddle trigger sensor | IR slot-type optocoupler, LM393-based, 3.3–5V, DO output only | **[UNVERIFIED — generic/unbranded, AliExpress item 3256804480682852]** | Selected sensor (replaces Omron D2JW-01K11). Bare PCB, not automotive/vibration rated as shipped — see [Sensor Detail](#sensor-detail--ir-slot-type-optocoupler) below for required mitigations. |
+| — | — | Sensor mounting fasteners | **[PENDING — not yet designed]** | — | Sensor board must be rigid-mounted to the paddle body (no free-hanging PCB); exact fastener spec depends on the not-yet-designed slot pocket geometry. See Sensor Detail below. |
+| — | — | Conformal coating or potting compound | **[UNVERIFIED — not yet selected]** | — | Recommended to protect the bare sensor PCB from vibration and moisture; product not yet chosen. |
+| — | — | Wire leads | Lightweight hookup wire, 26–28 AWG | — | Short runs from sensor pads (VCC, GND, DO) to PCB or Arduino — solder direct, skip Dupont/header connectors. Exact length depends on routing in your steering column. See `Schematics/README.md` for wiring. |
 | — | — | Fasteners (steering wheel mount) | [UNVERIFIED — confirm before purchasing] | — | Fastener spec depends on your steering wheel and bracket design. Add here once mounting method is finalised. |
 
 > **Total estimated cost:** [UNVERIFIED — confirm before purchasing]
 
-[PENDING RESEARCH — see HANDOFFS.md]: Confirm M2 fastener spec against printed pocket geometry and D2JW-01K11 mounting hole dimensions. Confirm steering wheel mounting fastener type.
+[PENDING RESEARCH — see HANDOFFS.md]: Confirm optocoupler module PCB dimensions and slot gap
+so the paddle body pocket can be designed. Confirm steering wheel mounting fastener type.
+The former D2JW-01K11 M2 fastener research is no longer needed — that switch has been replaced.
 
 ---
 
-## Switch Detail — Omron D2JW-01K11
+## Sensor Detail — IR Slot-Type Optocoupler
 
-The D2JW-01K11 is the formally selected paddle switch as of 2026-03-20. It replaces the
-former D2F-5L selection. **These two switches are not dimensionally interchangeable —
-the 3D model switch pocket must be designed or updated for the D2JW-01K11 geometry.**
+The IR slot-type optocoupler (LM393-based) is the current paddle trigger sensor as of
+2026-08-17. It replaces the former Omron D2JW-01K11 mechanical switch to eliminate mechanical
+wear. **This is not a lever-actuated switch geometry — the mechanical requirement is
+fundamentally different, and the paddle 3D model needs a new pocket design, not a depth
+tweak of the old switch pocket.**
 
-### Body Dimensions
-
-| Dimension | Value |
-|---|---|
-| Body width | 12.7 mm |
-| Body height | 12.3 mm |
-| Body depth | 5.3 mm ± 0.1 mm |
-| Mounting hole diameter | 2.35 mm |
-| Mounting hole spacing | 3.95 × 3.95 mm |
-| Lever material / thickness | Stainless steel, t0.3 mm |
-| Lever arc radius | R16.5 mm |
-
-### Actuation Geometry
+### Confirmed Electrical Facts
 
 | Parameter | Value |
 |---|---|
-| Operating Position (OP) — lever tip travel to actuation | 8.4 mm ± 0.8 mm |
-| OP measurement arm height above body base | 6.15 mm |
-| Pretravel | 6.4 mm max |
-| Overtravel | 1.4 mm min |
-| Movement Differential | 0.7 mm max |
+| Sensor type | Slot-type IR optocoupler (photointerrupter) — NOT Hall effect |
+| Comparator IC | LM393 |
+| Operating voltage | 3.3V–5V — works on Uno, Mega, or Nano, no level-shifting needed |
+| Pins | VCC, GND, DO (digital output only) |
+| Output type | Actively driven push-pull — do **not** use Arduino `INPUT_PULLUP` |
+| Output polarity | Slot unobstructed → DO LOW. Tab in slot → DO HIGH. |
+| Confirmed mechanical orientation (2026-08-17, user) | Tab sits **in** the slot at rest; paddle pull clears it |
+| IP rating | None — bare PCB as shipped |
 
-### Switch Pocket Design Rule
+Source: `SOURCES.md` → "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393), User-Owned Part".
 
-> ⚠️ The switch pocket in the 3D-printed paddle body **must** position the lever tip
-> **8.4 mm from the paddle contact surface** (the point the driver's finger presses).
+### Mechanical Requirement — [PENDING — Geometry Not Yet Designed]
+
+> ⚠️ **The paddle body pocket for this sensor has not been designed.** Unlike the switch it
+> replaces, this sensor needs an opaque tab to pass through a slot gap on the paddle
+> mechanism (approximate gap ~5mm — **[UNVERIFIED]**, not independently sourced). Exact
+> module PCB dimensions and mounting hole layout are not yet confirmed.
 >
-> This is **1.6 mm deeper** than the former D2F-5L pocket, which was designed for a
-> 6.8 mm operating position. A pocket designed for the D2F-5L will not reliably actuate
-> the D2JW-01K11 — the lever will not reach its operating position under normal finger
-> pressure. Update any existing pocket geometry before printing.
+> [PENDING RESEARCH — see HANDOFFS.md]: Confirm the optocoupler module's physical PCB
+> dimensions, slot gap width, and any mounting holes from the AliExpress listing or by
+> direct measurement, so the paddle pocket geometry can be modeled.
 
-### Mounting Method
+### Required Mitigations (Bare, Unrated PCB)
 
-The D2JW-01K11 is a **chassis-mount** switch — it is not a PCB through-hole component.
-The switch body screws directly into the printed paddle body via its two 2.35 mm mounting
-holes. Short wire leads are soldered to the solder lug terminals and routed to the
-Arduino or PCB.
+Because this module ships with no IP rating and no automotive/vibration qualification:
+- Solder wires direct to the module pads — skip Dupont/header connectors
+- Strain-relief the leads at the PCB
+- Rigid-mount the board to the paddle body — no free-hanging PCB
+- Conformal-coat or pot the board for vibration and moisture resistance
 
-Do not attempt to mount this switch to a PCB by its terminals. It is not rated or designed
-for that method.
+### Sourcing Note
 
-### Why This Switch Was Selected
-
-| Requirement | D2JW-01K11 | Former D2F-5L |
-|---|---|---|
-| IP rating | IP67 — dust-tight, waterproof | IP40 — no water protection |
-| Electrical life | 100,000 cycles (~13.7 yrs at 20 shifts/day) | 10,000 cycles |
-| Mechanical life | 1,000,000 cycles | 1,000,000 cycles |
-| Operating force | 82 gf — good tactile snap | 80 gf — similar feel |
-| Temperature range | −40°C to +85°C | −40°C to +85°C |
-| Mounting | Chassis mount — robust under vibration | PCB through-hole — less suited to paddle use |
-
-The D2JW-01K11 offers 10× better electrical life and full IP67 sealing while preserving
-near-identical paddle feel. It is the correct choice for street, off-road, and sustained use.
+This is a **generic/unbranded AliExpress module** (item 3256804480682852), not a stable
+sourced part like the Omron switches it replaces. Verify supplier stock before relying on it
+for a repeat build.
 
 ---
 
@@ -121,46 +116,48 @@ near-identical paddle feel. It is the correct choice for street, off-road, and s
 
 ## Assembly Notes
 
-### Step 1 — Prepare the Switch
+> **2026-08-17:** Steps below reflect the optocoupler sensor. Step 2 (mounting in the paddle
+> body) is **blocked** — see [Mechanical Requirement](#mechanical-requirement--pending--geometry-not-yet-designed)
+> above — until the slot-pocket geometry is designed.
 
-**Do:** Solder two short wire leads (26–28 AWG, length to suit your routing) to the
-normally-open (NO) terminal and the Common (C) terminal on the D2JW-01K11 solder lugs.
-Insulate each connection with heat-shrink tubing.
+### Step 1 — Prepare the Sensor
 
-**Verify:** Use a multimeter in continuity mode. With the lever at rest (not pressed), confirm
-**no continuity** between the two leads. Press the lever to its operating position — confirm
-**continuity** closes. Release — confirm it opens again.
+**Do:** Solder three short wire leads (26–28 AWG, length to suit your routing) directly to
+the module's VCC, GND, and DO pads — skip Dupont/header connectors, this module is not rated
+for vibration and a crimped connector is a failure point. Insulate each connection with
+heat-shrink tubing and add strain relief at the PCB.
+
+**Verify:** Power the module at 3.3–5V. With the slot clear (nothing blocking it), DO should
+read LOW. Pass an opaque object through the slot — DO should read HIGH while blocked, LOW
+again once clear. Confirm with a multimeter or by reading the pin with a test Arduino sketch
+before installing in the paddle.
 
 ---
 
-### Step 2 — Mount the Switch in the Paddle Body
+### Step 2 — Mount the Sensor in the Paddle Body
 
-**Do:** Place the D2JW-01K11 into the switch pocket in the printed paddle body. Secure
-with two M2 screws through the switch's 2.35 mm mounting holes.
-
-**Verify:** The lever should sit flush with or proud of the paddle contact surface at rest.
-Press the paddle face — the lever should actuate (click) before the paddle body bottoms
-out. If the lever does not reach its operating position (8.4 mm travel) under normal
-finger pressure, the pocket is too shallow — recheck the pocket depth in the model.
-
-> ⚠️ Do not overtighten the M2 mounting screws. The D2JW-01K11 body is rated for
-> chassis mounting loads — excessive clamping force on the body may crack the housing.
+**[PENDING — paddle pocket geometry not yet designed for this sensor.]** See
+[Mechanical Requirement](#mechanical-requirement--pending--geometry-not-yet-designed) above.
+Once designed: rigid-mount the sensor board to the paddle body (no free-hanging PCB), oriented
+so the paddle mechanism's opaque tab passes through the slot on pull. Conformal-coat or pot
+the board per the mitigations listed above before final installation.
 
 ---
 
 ### Step 3 — Route and Connect Wiring
 
-**Do:** Route the wire leads from the switch solder lugs through the paddle body and
-steering column to the Arduino Mega 2560. Connect as follows:
+**Do:** Route the wire leads from the sensor pads through the paddle body and steering column
+to the Arduino (Uno, Mega, or Nano — same pin numbers on all three). Connect as follows:
 
 | Paddle | Arduino Pin | Mode | Notes |
 |---|---|---|---|
-| Shift Up (right paddle) | D2 | INPUT_PULLUP, active LOW | Common leg → GND |
-| Shift Down (left paddle) | D3 | INPUT_PULLUP, active LOW | Common leg → GND |
+| Shift Up (right paddle) | D2 | plain INPUT — sensor drives the line | Tab-in-slot-at-rest = HIGH; do not use INPUT_PULLUP |
+| Shift Down (left paddle) | D3 | plain INPUT — sensor drives the line | Tab-in-slot-at-rest = HIGH; do not use INPUT_PULLUP |
 
-Wire the Common (C) terminal of each switch to GND. Wire the NO terminal to the
-Arduino INPUT_PULLUP pin. When the paddle is pressed, the circuit closes and the pin
-reads LOW — this is the active state the firmware expects.
+Wire GND on each sensor to Arduino GND, VCC to Arduino 5V (or 3.3V — module accepts either).
+Wire DO to the Arduino input pin. At rest (tab in slot) the pin reads HIGH; pulling the paddle
+clears the tab and the pin reads LOW — the same falling-edge trigger the firmware already
+expects (see `ArduinoCode/SYSTEM.md`).
 
 **Verify:** With the Arduino powered and running the firmware, open the Serial Monitor
 (115200 baud). Press the Shift Up paddle — confirm the display shows a gear increment.
@@ -169,21 +166,20 @@ Press Shift Down — confirm a decrement. No press should produce no change.
 For full wiring details and the steering column routing guide, see `Schematics/README.md`.
 
 > ⚠️ SAFETY: The NSS (neutral safety switch) is a continuity switch — NOT powered.
-> Do not apply 12 V to any NSS or paddle switch pin. Use INPUT_PULLUP on the Arduino
-> and wire common legs to GND only.
+> Do not apply 12 V to any NSS or paddle sensor pin. The paddle sensors run on 3.3–5V logic only.
 
 ---
 
-## Switch Alternatives
+## Sensor Alternatives
 
-If the D2JW-01K11 is unavailable, the following alternatives were evaluated. All are
-IP67-rated normally-open momentary types. **Do not substitute the D2F-5L** — it has
-10× lower electrical life and no water sealing.
+The optocoupler sensor is user-owned hardware, not a formally sourced/evaluated part — no
+alternatives have been evaluated. If it proves unsuitable (sourcing, reliability, or mechanical
+integration issues), the former mechanical switch remains a fallback option:
 
 | Part | IP Rating | Electrical Life | Operating Force | Op. Position | Notes |
 |---|---|---|---|---|---|
-| **Omron D2JW-01K11** *(selected)* | IP67 | 100,000 cycles | 82 gf | 8.4 mm | Straight lever, chassis mount, solder lug |
+| **Omron D2JW-01K11** *(former selection — mechanical switch fallback)* | IP67 | 100,000 cycles | 82 gf | 8.4 mm | Straight lever, chassis mount, solder lug. See `hardware-bom` skill for full specs if reverting. |
 | Omron D2JW-011 | IP67 | 100,000 cycles | 250 gf | — | Pin plunger — rejected; stiff feel, incompatible geometry |
 | Omron D2JW-01K21 | IP67 | 100,000 cycles | 100 gf | 14.6 mm | Roller lever — superseded by D2JW-01K11 |
 | Omron D2JW-AQ | IP67 | not confirmed | — | — | Automotive-rated; specs unconfirmed — [UNVERIFIED] |
-| **Omron D2F-5L** *(replaced — do not use)* | IP40 | 10,000 cycles | 80 gf | 6.8 mm | Former selection — no water sealing, low electrical life. Pocket geometry incompatible with D2JW-01K11. |
+| **Omron D2F-5L** *(replaced — do not use)* | IP40 | 10,000 cycles | 80 gf | 6.8 mm | No water sealing, low electrical life. |

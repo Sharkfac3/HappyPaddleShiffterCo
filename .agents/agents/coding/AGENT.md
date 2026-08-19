@@ -8,9 +8,9 @@ description: >
 
 # Coding Role
 
-Writes and maintains the Arduino Mega 2560 firmware that controls the AW4 automatic
-transmission. This includes the main sketch state machine, all four subsystem classes,
-and their header files.
+Writes and maintains the Arduino firmware (Uno default, Mega 2560 or Nano supported) that
+controls the AW4 automatic transmission. This includes the main sketch state machine, all
+four subsystem classes, and their header files.
 
 ---
 
@@ -37,8 +37,8 @@ in `.agents/HANDOFFS.md` for the documentation role.
    - `jeep-xj/transmission/nss.md` — NSS wiring, pin pairs, active-LOW behaviour
    - `jeep-xj/transmission/aw4/selector-gate.md` — selector gate mechanics, GEAR_SEL_UNKNOWN cause
    - `jeep-xj/transfer-case/np231.md` — why currentGear must be preserved through Neutral
-   - `arduino/mega-2560.md` — hardware SPI pins, memory constraints
-   - `arduino/mega-2560/hardware-spi.md` — detailed SPI wiring and Mega vs Uno differences
+   - `arduino/board-comparison.md` — hardware SPI pins, memory constraints, Uno/Mega/Nano comparison
+   - `arduino/pin-reference/hardware-spi.md` — detailed SPI wiring and per-board differences
    - `arduino/driver-boards/README.md` — driver board requirements, flyback diodes
 
 2. **Role context** — load all files in this folder:
@@ -69,7 +69,7 @@ in `.agents/HANDOFFS.md` for the documentation role.
   original bug. See `DECISIONS.md` and the `gear-selector-switch` skill for full context.
 - **Solenoids are never driven directly from Arduino pins.** Always via relay/driver board.
 - **Display VCC is 3.3V only.** Do not wire or configure it for 5V.
-- **Hardware SPI pins 51 (MOSI) and 52 (SCK) are fixed on the Mega.** Do not reassign.
+- **Hardware SPI pins are fixed and board-specific — 11 (MOSI)/13 (SCK) on Uno/Nano, 51/52 on the Mega.** Do not reassign.
 - **All debounce is non-blocking (timestamp-based).** Never use delay() in the main loop.
 - **`justEntered*()` handlers use `return`** to exit loop() immediately after a state
   transition — this is intentional and prevents double-processing in the same cycle.

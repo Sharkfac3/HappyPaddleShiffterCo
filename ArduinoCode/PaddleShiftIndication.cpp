@@ -3,11 +3,19 @@
 // =============================================================================
 // PaddleShiftIndication.cpp
 //
-// Monitors two momentary paddle switches (shift up, shift down) and exposes
-// one-shot request flags to ArduinoCode.ino.
+// Monitors two paddle-mounted IR slot optocoupler sensors (shift up, shift down)
+// and exposes one-shot request flags to ArduinoCode.ino.
 //
-// Each switch is wired active LOW: one terminal to an Arduino INPUT_PULLUP
-// pin, the other terminal to GND. Unpressed = HIGH, pressed = LOW.
+// Each sensor is an LM393-based slot-type IR photointerrupter (not a mechanical
+// switch, not Hall effect) with a metal tab that sits IN the slot at rest.
+// The sensor's DO pin is an ACTIVELY DRIVEN push-pull output — do NOT enable
+// INPUT_PULLUP on these pins, the sensor drives the line itself.
+//
+// Tab in slot (rest) = DO HIGH. Paddle pull clears the tab from the slot =
+// DO LOW. This is a HIGH->LOW falling edge on pull, same polarity the
+// debounce/edge-detection logic below already expects from the switches
+// this sensor replaces — no logic change needed, only the pin mode.
+// Source: SOURCES.md "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393)".
 //
 // Debounce strategy: timestamp-based (not blocking).
 // A press is only recognised when the LOW reading has been stable for at
@@ -32,13 +40,14 @@ PaddleShiftIndication::PaddleShiftIndication(int pinUp, int pinDown)
 {}
 
 // -----------------------------------------------------------------------------
-// begin() — configure pins as INPUT_PULLUP.
+// begin() — configure pins as plain INPUT.
 // Must be called once in setup() before any update() calls.
 // -----------------------------------------------------------------------------
 void PaddleShiftIndication::begin() {
-    // Switches are wired to GND — INPUT_PULLUP means HIGH = unpressed, LOW = pressed
-    pinMode(_pinUp,   INPUT_PULLUP);
-    pinMode(_pinDown, INPUT_PULLUP);
+    // Sensor DO output is actively driven (push-pull) — INPUT_PULLUP would
+    // fight the sensor's own driver. Plain INPUT only.
+    pinMode(_pinUp,   INPUT);
+    pinMode(_pinDown, INPUT);
 }
 
 // -----------------------------------------------------------------------------

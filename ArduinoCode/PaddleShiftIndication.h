@@ -4,10 +4,10 @@
 #include <Arduino.h>
 
 // PaddleShiftIndication
-// Monitors shift up and shift down paddle switches wired to the Arduino.
-// Applies 50ms software debounce to prevent spurious multi-shifts from
-// mechanical contact bounce (a known issue with paddle switches per
-// community A340 implementations).
+// Monitors shift up and shift down paddle IR slot optocoupler sensors
+// (LM393-based, tab-in-slot-at-rest) wired to the Arduino as plain INPUT
+// (sensor output is actively driven, not open-drain).
+// Applies 50ms software debounce as a safety margin against edge noise.
 //
 // Call update() every loop. Read shiftUpRequested() / shiftDownRequested()
 // to check for a pending shift — each returns true only once per physical press.

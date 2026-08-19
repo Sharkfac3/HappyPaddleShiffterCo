@@ -2,6 +2,8 @@
 generate_bom.py — Creates BOM.xlsx for HappyPaddleShifterCo
 """
 
+from pathlib import Path
+
 from openpyxl import Workbook
 from openpyxl.styles import (
     Font, PatternFill, Alignment, Border, Side
@@ -99,7 +101,7 @@ apply_header_row(ws1, 2, 7,
 
 # Row 3
 apply_header_row(ws1, 3, 7,
-    "Last Verified: 2026-03-20  |  Source: ArduinoCode/SYSTEM.md and .agents/skills/hardware-bom/SKILL.md",
+    "Last Verified: 2026-08-17  |  Source: ArduinoCode/SYSTEM.md and .agents/skills/hardware-bom/SKILL.md",
     make_font(size=9, color=WHITE_TXT),
     DARK_BLUE1)
 
@@ -114,10 +116,10 @@ for col, h in enumerate(headers, 1):
 
 # Data rows 5-9
 rows_data = [
-    (5, [1, "Arduino Mega 2560",
-         "ATmega2560 MCU, 54 digital I/O, 16 analog, 5V logic, 256KB flash",
+    (5, [1, "Arduino Uno (default), Mega 2560, or Nano",
+         "5V Arduino board supported by current firmware; same project pin numbers on either board",
          "—", "—",
-         "Original or compatible clone. Do NOT use Uno — insufficient I/O pins and flash memory.",
+         "Original or compatible clone. Display DIN/CLK use each board's fixed hardware SPI pins automatically.",
          "Confirmed"]),
     (6, [1, "OLED Display",
          "WaveShare 1.5\" RGB OLED, SSD1351 driver, 128×128 px, 3.3V VCC",
@@ -134,11 +136,11 @@ rows_data = [
          "1N4007", "—",
          "One across each solenoid coil (S1, S2, SLU). Prevents back-EMF damage. MANDATORY.",
          "Confirmed"]),
-    (9, [2, "Paddle Switch",
-         "Omron D2JW-01K11, SPDT N/O momentary, straight lever, IP67, 30VDC/100mA, chassis mount",
-         "Omron D2JW-01K11", "—",
-         "IP67 waterproof. 100,000 electrical cycle life. NOT interchangeable with D2F-5L (pocket depth differs by 1.6 mm).",
-         "Confirmed"]),
+    (9, [2, "Paddle Trigger Sensor",
+         "IR slot-type optocoupler module, LM393-based, 3.3V–5V, VCC/GND/DO, digital output only",
+         "Generic / unbranded", "—",
+         "Current intended build. Caveats only: generic/unbranded part, supplier stock unverified, bare PCB needs protection, rigid mounting, and strain relief.",
+         "Unverified sourcing — build intent confirmed"]),
 ]
 
 for row_num, vals in rows_data:
@@ -283,9 +285,9 @@ set_col_widths(ws2, [14, 38, 22, 16, 60])
 freeze_rows(ws2, 4)
 
 # ============================================================
-# SHEET 3 — Paddle Switch Detail
+# SHEET 3 — Paddle Sensor Detail
 # ============================================================
-ws3 = wb.create_sheet("Paddle Switch Detail")
+ws3 = wb.create_sheet("Paddle Sensor Detail")
 set_tab_color(ws3, "7030A0")
 
 DK_PURPLE  = hex_fill("3E1154")
@@ -293,17 +295,17 @@ HDR_PURPLE = hex_fill("4B2067")
 SEC_PURPLE = hex_fill("7030A0")
 
 apply_header_row(ws3, 1, 3,
-    "Paddle Switch — Omron D2JW-01K11",
+    "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393-based)",
     make_font(bold=True, size=14, color=WHITE_TXT),
     DK_PURPLE)
 
 apply_header_row(ws3, 2, 3,
-    "Selected switch for HappyPaddleShifterCo paddle hardware",
+    "Current intended paddle input design for HappyPaddleShifterCo",
     make_font(italic=True, color=WHITE_TXT),
     DK_PURPLE)
 
 apply_header_row(ws3, 3, 3,
-    "Source: Omron D2JW-01K11 datasheet, verified 2026-03-20",
+    "Source: .agents/skills/hardware-bom/SKILL.md, Models/README.md, ArduinoCode/SYSTEM.md — verified 2026-08-17",
     make_font(size=9, color=WHITE_TXT),
     DK_PURPLE)
 
@@ -319,22 +321,22 @@ ws3.row_dimensions[4].height = 18
 # Row 5: section label
 ws3.merge_cells("A5:C5")
 c5 = ws3["A5"]
-c5.value = "ELECTRICAL SPECIFICATIONS"
+c5.value = "CONFIRMED ELECTRICAL FACTS"
 c5.font  = make_font(bold=True, color=WHITE_TXT)
 c5.fill  = SEC_PURPLE
 c5.alignment = Alignment(horizontal="left", vertical="center")
 ws3.row_dimensions[5].height = 18
 
 elec_rows = [
-    (6,  ["Electrical", "Contact Configuration", "SPDT (normally-open + normally-closed contacts)"]),
-    (7,  ["Electrical", "Voltage Rating",         "30 VDC"]),
-    (8,  ["Electrical", "Current Rating",          "100 mA DC"]),
-    (9,  ["Electrical", "Operating Force",         "82 gf"]),
-    (10, ["Electrical", "Release Force",           "16 gf"]),
-    (11, ["Electrical", "Electrical Life",         "100,000 cycles (~13.7 years at 20 shifts/day)"]),
-    (12, ["Electrical", "Mechanical Life",         "1,000,000 cycles"]),
-    (13, ["Electrical", "Operating Temperature",   "−40°C to +85°C"]),
-    (14, ["Electrical", "IP Rating",               "IP67 — dust-tight and fully waterproof"]),
+    (6,  ["Electrical", "Sensor type", "Confirmed — slot-type IR optocoupler / photointerrupter, not Hall effect"]),
+    (7,  ["Electrical", "Comparator IC", "Confirmed — LM393"]),
+    (8,  ["Electrical", "Operating voltage", "Confirmed — 3.3V to 5V, compatible with Uno, Mega, or Nano logic"]),
+    (9,  ["Electrical", "Pins", "Confirmed — VCC, GND, DO (digital output only)"]),
+    (10, ["Electrical", "Output type", "Confirmed — actively driven push-pull; Arduino input must be plain INPUT, not INPUT_PULLUP"]),
+    (11, ["Electrical", "Output polarity", "Confirmed — slot unobstructed = DO LOW; slot obstructed = DO HIGH"]),
+    (12, ["Electrical", "At-rest orientation", "Confirmed — tab sits in the slot at rest, so DO is HIGH at rest; paddle pull clears the slot and drives DO LOW"]),
+    (13, ["Electrical", "Trigger edge used by firmware", "Confirmed — same HIGH→LOW falling edge as the previous logic expected"]),
+    (14, ["Electrical", "IP / environmental rating", "Confirmed limitation — none stated; module ships as a bare PCB"]),
 ]
 for row_num, vals in elec_rows:
     fill = WHITE_FILL if (row_num % 2 == 0) else LAVENDER
@@ -343,31 +345,27 @@ for row_num, vals in elec_rows:
         c.font  = make_font()
         c.fill  = fill
         c.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
-    ws3.row_dimensions[row_num].height = 18
+    ws3.row_dimensions[row_num].height = 24
 
 # Row 15: section label
 ws3.merge_cells("A15:C15")
 c15 = ws3["A15"]
-c15.value = "MECHANICAL / MOUNTING"
+c15.value = "CURRENT BUILD CAVEATS / MITIGATIONS"
 c15.font  = make_font(bold=True, color=WHITE_TXT)
 c15.fill  = SEC_PURPLE
 c15.alignment = Alignment(horizontal="left", vertical="center")
 ws3.row_dimensions[15].height = 18
 
 mech_rows = [
-    (16, ["Mechanical", "Actuator Type",                    "Lever, Straight"]),
-    (17, ["Mechanical", "Body Width",                       "12.7 mm"]),
-    (18, ["Mechanical", "Body Height",                      "12.3 mm"]),
-    (19, ["Mechanical", "Body Depth",                       "5.3 mm ± 0.1 mm"]),
-    (20, ["Mechanical", "Mounting Hole Diameter",           "2.35 mm"]),
-    (21, ["Mechanical", "Mounting Hole Spacing",            "3.95 × 3.95 mm"]),
-    (22, ["Mechanical", "Lever Arc Radius",                 "R16.5 mm (stainless steel t0.3 mm)"]),
-    (23, ["Mechanical", "Operating Position (lever tip travel)", "8.4 mm ± 0.8 mm"]),
-    (24, ["Mechanical", "Pretravel",                        "6.4 mm max"]),
-    (25, ["Mechanical", "Overtravel",                       "1.4 mm min"]),
-    (26, ["Mechanical", "Movement Differential",            "0.7 mm max"]),
-    (27, ["Mechanical", "Termination",                      "Solder lug — short wire leads to PCB/Arduino"]),
-    (28, ["Mechanical", "Mount Type",                       "Chassis mount — screws directly to 3D-printed paddle body"]),
+    (16, ["Build status", "Part sourcing", "Unverified — generic/unbranded module, no stable manufacturer part number; verify supplier stock before relying on repeat availability"]),
+    (17, ["Build status", "PCB protection", "Confirmed requirement — protect the bare PCB against vibration and moisture (for example conformal coat or potting after validation)"]),
+    (18, ["Build status", "Wire termination", "Confirmed requirement — solder leads directly to the board; skip vibration-sensitive plug-in connectors"]),
+    (19, ["Build status", "Strain relief", "Confirmed requirement — add strain relief at the sensor PCB"]),
+    (20, ["Build status", "Mounting method", "Confirmed requirement — rigid-mount the sensor board to the paddle body; do not leave it free-hanging"]),
+    (21, ["Mechanical", "PCB dimensions", "Pending research — exact module length, width, and thickness not yet confirmed"]),
+    (22, ["Mechanical", "Slot gap dimensions", "Pending research — do not assume slot width or depth until sourced or measured"]),
+    (23, ["Mechanical", "Mounting hole layout", "Pending research — hole presence, positions, and diameters not yet confirmed"]),
+    (24, ["Mechanical", "Mounting fastener spec", "Pending research — depends on the not-yet-confirmed module geometry and paddle pocket design"]),
 ]
 for row_num, vals in mech_rows:
     fill = WHITE_FILL if (row_num % 2 == 0) else LAVENDER
@@ -376,23 +374,22 @@ for row_num, vals in mech_rows:
         c.font  = make_font()
         c.fill  = fill
         c.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
-    ws3.row_dimensions[row_num].height = 18
+    ws3.row_dimensions[row_num].height = 24
 
-# Row 29: blank
-ws3.row_dimensions[29].height = 8
+# Row 25: blank
+ws3.row_dimensions[25].height = 8
 
-# Row 30: 3D print note
-ws3.merge_cells("A30:C30")
-c30 = ws3["A30"]
-c30.value = ("3D PRINT NOTE: Switch pocket must place lever tip 8.4 mm from paddle contact surface. "
-             "This is 1.6 mm DEEPER than the former D2F-5L pocket (6.8 mm). "
-             "The D2JW-01K11 and D2F-5L are NOT dimensionally interchangeable.")
-c30.font  = make_font(bold=True, size=10)
-c30.fill  = LYELLOW
-c30.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
-ws3.row_dimensions[30].height = 50
+# Row 26: integration note
+ws3.merge_cells("A26:C26")
+c26 = ws3["A26"]
+c26.value = ("INTEGRATION NOTE: This sensor needs a slot-type paddle geometry, not a lever-switch pocket. "
+             "Mechanical pocket dimensions remain Pending research until the module is sourced or measured.")
+c26.font  = make_font(bold=True, size=10)
+c26.fill  = LYELLOW
+c26.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+ws3.row_dimensions[26].height = 40
 
-set_col_widths(ws3, [18, 38, 45])
+set_col_widths(ws3, [18, 38, 58])
 freeze_rows(ws3, 4)
 
 # ============================================================
@@ -435,7 +432,7 @@ lib_rows = [
     (6, ["SPI",
          "Arduino IDE built-in",
          "No install required — included with Arduino IDE",
-         "Hardware SPI. On Mega 2560: pin 51 = MOSI (DIN), pin 52 = SCK (CLK). These pins are FIXED and cannot be reassigned."]),
+         "Hardware SPI. Uno uses MOSI 11 / SCK 13; Mega uses MOSI 51 / SCK 52. DIN/CLK are fixed per board and selected automatically by the SPI library."]),
 ]
 for row_num, vals in lib_rows:
     fill = WHITE_FILL if (row_num % 2 == 0) else LGREY_FILL
@@ -463,7 +460,7 @@ DK_ORANGE  = hex_fill("833C00")
 HDR_ORANGE = hex_fill("A9441D")
 
 apply_header_row(ws5, 1, 6,
-    "Arduino Mega 2560 — Pin Assignments",
+    "Arduino Uno (default) / Mega 2560 / Nano — Pin Assignments",
     make_font(bold=True, size=14, color=WHITE_TXT),
     DK_ORANGE)
 
@@ -475,7 +472,7 @@ apply_header_row(ws5, 2, 6,
 # Row 3: warning
 ws5.merge_cells("A3:F3")
 c3b = ws5["A3"]
-c3b.value = "WARNING: Solenoid pins (11, 12, 13) must connect via relay/driver board ONLY — never directly."
+c3b.value = "WARNING: Solenoid outputs A0, A1, and A2 must connect via relay/driver board ONLY. Display DIN/CLK stay on each board's fixed hardware SPI pins."
 c3b.font  = make_font(bold=True, color="C00000")
 c3b.fill  = LYELLOW
 c3b.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
@@ -491,17 +488,17 @@ for col, h in enumerate(hdr5, 1):
 ws5.row_dimensions[4].height = 18
 
 pin_rows = [
-    (5,  ["2",  "INPUT",  "INPUT_PULLUP", "Shift Up paddle → GND",           "Paddle Input",    "Active LOW. Triggers on falling edge. 50ms debounce."]),
-    (6,  ["3",  "INPUT",  "INPUT_PULLUP", "Shift Down paddle → GND",         "Paddle Input",    "Active LOW. Triggers on falling edge. 50ms debounce."]),
+    (5,  ["2",  "INPUT",  "INPUT", "Shift Up paddle sensor DO",           "Paddle Input",    "Sensor drives the line. Tab sits in slot at rest = HIGH; pull clears slot = LOW. Falling-edge trigger, 50ms debounce."]),
+    (6,  ["3",  "INPUT",  "INPUT", "Shift Down paddle sensor DO",         "Paddle Input",    "Sensor drives the line. Tab sits in slot at rest = HIGH; pull clears slot = LOW. Falling-edge trigger, 50ms debounce."]),
     (7,  ["4",  "INPUT",  "INPUT_PULLUP", "NSS Pin B (Park/Neutral) → GND",  "NSS Input",       "Active LOW. Park and Neutral are electrically indistinguishable."]),
     (8,  ["5",  "INPUT",  "INPUT_PULLUP", "NSS Pin E (Reverse) → GND",       "NSS Input",       "Active LOW. Pin A is common — wire NSS Pin A to GND."]),
     (9,  ["6",  "INPUT",  "INPUT_PULLUP", "NSS Pin G (3rd hold) → GND",      "NSS Input",       "Active LOW. Pin A is common — wire NSS Pin A to GND."]),
     (10, ["7",  "INPUT",  "INPUT_PULLUP", "NSS Pin H (1-2 hold) → GND",      "NSS Input",       "Active LOW. Pin A is common — wire NSS Pin A to GND."]),
-    (11, ["11", "OUTPUT", "—",            "S1 Solenoid → relay/driver board CH1",  "Solenoid Output", "WARNING: Via driver board ONLY. Never connect solenoid directly to Arduino pin."]),
-    (12, ["12", "OUTPUT", "—",            "S2 Solenoid → relay/driver board CH2",  "Solenoid Output", "WARNING: Via driver board ONLY. Never connect solenoid directly to Arduino pin."]),
-    (13, ["13", "OUTPUT", "—",            "SLU Solenoid → relay/driver board CH3", "Solenoid Output", "WARNING: Via driver board ONLY. Never connect solenoid directly to Arduino pin."]),
-    (14, ["51", "OUTPUT", "Hardware MOSI (SPI)", "Display DIN",               "Display (SPI)",   "Fixed hardware SPI MOSI on Mega 2560. Cannot be reassigned to another pin."]),
-    (15, ["52", "OUTPUT", "Hardware SCK (SPI)",  "Display CLK",               "Display (SPI)",   "Fixed hardware SPI SCK on Mega 2560. Cannot be reassigned to another pin."]),
+    (11, ["A0", "OUTPUT", "—",            "S1 Solenoid → relay/driver board CH1",  "Solenoid Output", "WARNING: Via driver board ONLY. Never connect solenoid directly to Arduino pin."]),
+    (12, ["A1", "OUTPUT", "—",            "S2 Solenoid → relay/driver board CH2",  "Solenoid Output", "WARNING: Via driver board ONLY. Never connect solenoid directly to Arduino pin."]),
+    (13, ["A2", "OUTPUT", "—",            "SLU Solenoid → relay/driver board CH3", "Solenoid Output", "WARNING: Via driver board ONLY. Never connect solenoid directly to Arduino pin."]),
+    (14, ["11 (Uno) / 51 (Mega)", "OUTPUT", "Hardware MOSI (SPI)", "Display DIN",               "Display (SPI)",   "Fixed hardware SPI MOSI. Board-specific, cannot be reassigned, and selected automatically by the SPI library."]),
+    (15, ["13 (Uno) / 52 (Mega)", "OUTPUT", "Hardware SCK (SPI)",  "Display CLK",               "Display (SPI)",   "Fixed hardware SPI SCK. Board-specific, cannot be reassigned, and selected automatically by the SPI library."]),
     (16, ["A3", "OUTPUT", "—",            "Display RES",                      "Display Control", "—"]),
     (17, ["A4", "OUTPUT", "—",            "Display DC",                       "Display Control", "—"]),
     (18, ["A5", "OUTPUT", "—",            "Display CS",                       "Display Control", "—"]),
@@ -527,6 +524,7 @@ freeze_rows(ws5, 4)
 # ============================================================
 # Save
 # ============================================================
-out_path = r"C:\Users\sharkfac3\Workspace\coding\HappyPaddleShiffterCo\BOM.xlsx"
+repo_root = Path(__file__).resolve().parent.parent
+out_path = repo_root / "BOM.xlsx"
 wb.save(out_path)
 print(f"Saved: {out_path}")

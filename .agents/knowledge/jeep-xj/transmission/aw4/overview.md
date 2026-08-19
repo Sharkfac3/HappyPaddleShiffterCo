@@ -50,7 +50,7 @@ The factory AW4 TCU is a standalone ECU that:
 - Commands the SLU solenoid for torque converter lockup
 - Controls line pressure via a separate pressure control solenoid (not used in this project)
 
-**This project bypasses the factory TCU completely.** The Arduino Mega reads the NSS directly and accepts driver input via paddle switches. Shift scheduling is entirely manual — the driver determines when to change gear.
+**This project bypasses the factory TCU completely.** The Arduino (Uno, Mega, or Nano) reads the NSS directly and accepts driver input via paddle trigger sensors. Shift scheduling is entirely manual — the driver determines when to change gear.
 
 The factory TCU connector can be left disconnected. The factory TCU wiring harness to the solenoids and NSS is replaced with the custom harness described in the project wiring documentation.
 

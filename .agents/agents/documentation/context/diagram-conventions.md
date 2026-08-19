@@ -30,7 +30,7 @@ Signals flow left to right. The source (power or signal origin) is on the left; 
 ### Example — NSS to Arduino Wiring
 
 ```
-AW4 NSS (8-pin Deutsch)              Arduino Mega 2560
+AW4 NSS (8-pin Deutsch)              Arduino (Uno/Mega/Nano)
 ┌─────────────────┐
 │ Pin B (Park/N)  │──── INPUT_PULLUP ────→ D4
 │ Pin C           │──── GND ──────────────→ GND
@@ -46,11 +46,11 @@ AW4 NSS (8-pin Deutsch)              Arduino Mega 2560
 ### Example — Solenoid Driver Block
 
 ```
-Arduino Mega 2560         Driver Board              AW4 Solenoids (12V)
+Arduino (Uno/Mega/Nano)    Driver Board              AW4 Solenoids (12V)
 ┌────────────┐            ┌────────────┐            ┌───────────┐
-│ D11 (S1)   │────────→  │ CH1 IN     │──[relay]──→│ S1 coil   │
-│ D12 (S2)   │────────→  │ CH2 IN     │──[relay]──→│ S2 coil   │
-│ D13 (SLU)  │────────→  │ CH3 IN     │──[relay]──→│ SLU coil  │
+│ A0 (S1)    │────────→  │ CH1 IN     │──[relay]──→│ S1 coil   │
+│ A1 (S2)    │────────→  │ CH2 IN     │──[relay]──→│ S2 coil   │
+│ A2 (SLU)   │────────→  │ CH3 IN     │──[relay]──→│ SLU coil  │
 └────────────┘            │ GND        │←───────────│ Common GND│
                           │ 12V IN     │←───────────│ 12V supply│
                           └────────────┘            └───────────┘
@@ -67,7 +67,7 @@ Use block diagrams to show system architecture, not individual signals.
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│                  Arduino Mega 2560                    │
+│              Arduino (Uno/Mega/Nano)                  │
 │                                                       │
 │  ┌──────────────┐    ┌──────────────┐                │
 │  │ PaddleShift  │    │ GearSelector │                │

@@ -28,9 +28,9 @@ Pin defines:
 #define PIN_NSS_R       5
 #define PIN_NSS_3       6
 #define PIN_NSS_12      7
-#define PIN_S1          11
-#define PIN_S2          12
-#define PIN_SLU         13
+#define PIN_S1          A0
+#define PIN_S2          A1
+#define PIN_SLU         A2
 #define PIN_LCD_CS      A5
 #define PIN_LCD_DC      A4
 #define PIN_LCD_RST     A3
@@ -141,7 +141,7 @@ void showBlank();        // Clears screen — used for GEAR_SEL_UNKNOWN
 ```
 
 Key behaviour:
-- **Hardware SPI on Mega: DIN→51, CLK→52 — fixed, cannot be reassigned**
+- **Hardware SPI, fixed per board, cannot be reassigned: Mega DIN→51/CLK→52; Uno/Nano DIN→11/CLK→13**
 - **VCC: 3.3V only** — 5V permanently damages the display
 - Driver: SSD1351 — do NOT call `initR()` (that is ST7735 only); use `_tft.begin()`
 - Redraw guard: skips SPI write if displayed value has not changed

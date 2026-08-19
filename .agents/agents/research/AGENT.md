@@ -37,7 +37,7 @@ verified facts and sources that other roles consume.
    - `jeep-xj/transmission/aw4/neutral-safety-switch.md` — deeper NSS detail, wire colour caveats
    - `jeep-xj/transmission/solenoid-truth-table.md` — solenoid mapping already confirmed
    - `jeep-xj/transmission/aw4/solenoids.md` — electrical specs, [UNVERIFIED] items to chase
-   - `arduino/mega-2560.md` — Mega SPI pins already confirmed
+   - `arduino/board-comparison.md` — Uno/Mega/Nano SPI pins and specs already confirmed
 
 2. **Role context** — load all files in this folder:
    - `context/trusted-sources.md` — known-good sources and known-bad (403) sources

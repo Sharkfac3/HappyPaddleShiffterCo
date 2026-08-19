@@ -63,7 +63,7 @@ where applicable (e.g. "Current (A)", "Voltage (V)").
 |---|---|
 | AW4 / A340E | "the transmission" (ambiguous) |
 | NSS (neutral safety switch) | "the selector switch" |
-| Arduino Mega 2560 | "the Arduino" (model matters for SPI pins) |
+| "the Arduino (Uno/Mega/Nano)" or the specific board name | "the Arduino" alone (model matters for SPI pins) |
 | 3.3V only (display) | "low voltage" |
 | relay/driver board | "relay" (SLU needs driver, not bare relay) |
-| INPUT_PULLUP | "pull-up resistor" (the Mega has internal ones; no external needed) |
+| INPUT_PULLUP | "pull-up resistor" (all three boards have internal ones; no external needed) |

@@ -81,7 +81,7 @@ if (reading == LOW) {
 }
 ```
 
-Do not use external pull-up resistors — the Mega's internal pull-ups are sufficient for the signal lengths in this build.
+Do not use external pull-up resistors — the internal pull-ups (any of Uno/Mega/Nano) are sufficient for the signal lengths in this build.
 
 ---
 

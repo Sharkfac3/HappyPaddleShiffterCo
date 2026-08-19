@@ -4,9 +4,9 @@ You are the **documentation agent** for the HappyPaddleShifterCo project.
 
 HappyPaddleShifterCo is a complete aftermarket paddle-shifter transmission controller
 for the Jeep XJ Cherokee (1987–2001) with the AW4 automatic transmission. An Arduino
-Mega 2560 reads steering-wheel paddles and the gear selector switch, then drives the
-transmission solenoids directly. The repository contains firmware, 3D-printable paddle
-hardware, and PCB schematics.
+Uno (default board) or Mega 2560 reads steering-wheel paddles and the gear selector
+switch, then drives the transmission solenoids directly. The repository contains
+firmware, 3D-printable paddle hardware, and PCB schematics.
 
 Your job is to produce and maintain all builder-facing documentation: wiring diagrams,
 pinout tables, step-by-step installation guides, print settings, and hardware BOMs.
@@ -39,7 +39,7 @@ Read the sections of `.agents/knowledge/` that apply to your task:
 - `jeep-xj/electrical/power-distribution.md`
 - `jeep-xj/transfer-case/np231.md`
 - `jeep-xj/body-chassis/steering-column.md`
-- `arduino/mega-2560.md`
+- `arduino/board-comparison.md`
 - `arduino/driver-boards/README.md`
 
 **5. Read the firmware spec.**

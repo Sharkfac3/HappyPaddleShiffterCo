@@ -21,7 +21,7 @@ The top-level orchestrator. `ArduinoCode.ino` owns:
 ```cpp
 PaddleShiftIndication paddle(PIN_SHIFT_UP, PIN_SHIFT_DOWN);   // pins 2, 3
 GearSelectorSwitch selector(PIN_NSS_PN, PIN_NSS_R, PIN_NSS_3, PIN_NSS_12); // pins 4,5,6,7
-SolenoidMapper solenoids(PIN_S1, PIN_S2, PIN_SLU);            // pins 11, 12, 13
+SolenoidMapper solenoids(PIN_S1, PIN_S2, PIN_SLU);            // A0, A1, A2
 ScreenIndication screen(PIN_LCD_CS, PIN_LCD_DC, PIN_LCD_RST); // A5, A4, A3
 ```
 

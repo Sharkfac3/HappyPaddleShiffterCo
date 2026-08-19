@@ -1,4 +1,5 @@
 #include "ScreenIndication.h"
+#include <string.h>
 
 // =============================================================================
 // ScreenIndication.cpp
@@ -6,8 +7,10 @@
 // Wrapper around the Adafruit SSD1351 library for the WaveShare 1.5" RGB OLED
 // (128×128 pixels, SSD1351 driver, 3.3V ONLY).
 //
-// Hardware SPI is used for maximum write speed (DIN→pin51, CLK→pin52 on Mega).
-// CS, DC, and RST are user-assigned digital output pins (A5, A4, A3 in .ino).
+// Hardware SPI is used for maximum write speed. DIN/CLK pins are fixed per
+// board and auto-selected by the SPI library (Uno: DIN→11, CLK→13;
+// Mega: DIN→51, CLK→52). CS, DC, and RST are user-assigned digital output
+// pins (A5, A4, A3 in .ino) and work the same on either board.
 //
 // Rendering is guarded by a _lastDisplayed cache — the screen is only redrawn
 // when the displayed value changes. This avoids the visible flicker that would
@@ -22,7 +25,7 @@
 
 ScreenIndication::ScreenIndication(int pinCS, int pinDC, int pinRST)
     : _tft(SCREEN_WIDTH, SCREEN_HEIGHT, &SPI, pinCS, pinDC, pinRST),
-      _lastDisplayed("")  // Empty string = nothing displayed yet
+      _lastDisplayed{0}  // Empty string = nothing displayed yet
 {}
 
 // -----------------------------------------------------------------------------
@@ -33,7 +36,7 @@ ScreenIndication::ScreenIndication(int pinCS, int pinDC, int pinRST)
 void ScreenIndication::begin() {
     _tft.begin();
     _tft.fillScreen(SSD1351_BLACK);
-    _lastDisplayed = "";  // Reset cache to match the now-blank display
+    _lastDisplayed[0] = '\0';  // Reset cache to match the now-blank display
 }
 
 // -----------------------------------------------------------------------------
@@ -46,23 +49,25 @@ void ScreenIndication::begin() {
 //   text  — the string to display (1 or 2 characters)
 //   color — 16-bit RGB565 colour constant (e.g. SSD1351_WHITE)
 // -----------------------------------------------------------------------------
-void ScreenIndication::renderText(const String& text, uint16_t color) {
+void ScreenIndication::renderText(const char* text, uint16_t color) {
     // Guard: skip if already showing this value — prevents flicker
-    if (text == _lastDisplayed) return;
+    if (strcmp(text, _lastDisplayed) == 0) return;
 
     // Clear the previous content
     _tft.fillScreen(SSD1351_BLACK);
     _tft.setTextColor(color);
 
+    size_t len = strlen(text);
+
     // Choose text size based on character count:
     //   1 char  → size 8 (large, easy to read while driving)
     //   2+ chars → size 5 (fits "4L" within 128px width)
-    int textSize  = (text.length() > 1) ? 5 : 8;
+    int textSize  = (len > 1) ? 5 : 8;
 
     // Adafruit GFX character metrics: each glyph cell is 6×8 base units
     int charW     = 6 * textSize;   // Pixel width per character
     int charH     = 8 * textSize;   // Pixel height per character
-    int textWidth = text.length() * charW;
+    int textWidth = len * charW;
 
     // Calculate top-left cursor position to center the string on the canvas
     int x = (SCREEN_WIDTH  - textWidth) / 2;
@@ -73,7 +78,9 @@ void ScreenIndication::renderText(const String& text, uint16_t color) {
     _tft.print(text);
 
     // Update cache so we don't redraw until the value changes
-    _lastDisplayed = text;
+    // (buffer sized for the longest displayed value — "4L" — see header)
+    strncpy(_lastDisplayed, text, sizeof(_lastDisplayed) - 1);
+    _lastDisplayed[sizeof(_lastDisplayed) - 1] = '\0';
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +91,7 @@ void ScreenIndication::renderText(const String& text, uint16_t color) {
 // Any other value renders "?" as an error indicator.
 // -----------------------------------------------------------------------------
 void ScreenIndication::showGear(int gear) {
-    String label;
+    const char* label;
     switch (gear) {
         case 1:  label = "1";  break;
         case 2:  label = "2";  break;
@@ -110,7 +117,7 @@ void ScreenIndication::showLow()     { renderText("L", SSD1351_WHITE); }
 // avoid an unnecessary SPI write every loop cycle during unknown state.
 // -----------------------------------------------------------------------------
 void ScreenIndication::showBlank() {
-    if (_lastDisplayed == "") return;   // Already blank — nothing to do
+    if (_lastDisplayed[0] == '\0') return;   // Already blank — nothing to do
     _tft.fillScreen(SSD1351_BLACK);
-    _lastDisplayed = "";
+    _lastDisplayed[0] = '\0';
 }

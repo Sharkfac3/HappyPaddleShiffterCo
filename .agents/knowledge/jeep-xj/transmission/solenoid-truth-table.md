@@ -32,8 +32,8 @@ Confirmed from two independent sources:
 
 ## Pin Assignments (Firmware)
 
-| Solenoid | Arduino Mega Pin | Direction |
+| Solenoid | Arduino Pin (Uno/Mega/Nano — identical) | Direction |
 |---|---|---|
-| S1 | Pin 11 | OUTPUT (to driver board) |
-| S2 | Pin 12 | OUTPUT (to driver board) |
-| SLU | Pin 13 | OUTPUT (to driver board) |
+| S1 | Pin A0 | OUTPUT (to driver board) |
+| S2 | Pin A1 | OUTPUT (to driver board) |
+| SLU | Pin A2 | OUTPUT (to driver board) |

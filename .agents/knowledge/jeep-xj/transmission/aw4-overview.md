@@ -13,7 +13,7 @@ Documentation for the Toyota A340E applies directly to the AW4.
 
 The factory AW4 is controlled by a **Transmission Control Unit (TCU)** that shifts
 automatically based on vehicle speed, throttle position, and other inputs. This project
-**bypasses the factory TCU entirely**. The Arduino Mega takes over all shift decisions.
+**bypasses the factory TCU entirely**. The Arduino (Uno default, Mega 2560 or Nano supported) takes over all shift decisions.
 
 The driver controls gear selection directly via steering-wheel paddles (shift up / shift down)
 and the gear selector switch (Park, Reverse, Neutral, Drive, 3rd hold, 1-2 hold).

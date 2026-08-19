@@ -12,11 +12,11 @@ All data is authoritative — sourced from ArduinoCode/README.md and ArduinoCode
 
 | Item | Part / Notes |
 |---|---|
-| Microcontroller | Arduino Mega 2560 (Uno lacks pins/flash) |
+| Microcontroller | Arduino Uno (default), Mega 2560, or Nano — same firmware, same pin numbers, no `#ifdef` |
 | Display | WaveShare 1.5" RGB OLED — SSD1351 driver, 128×128 px — **3.3V only, 5V destroys it** |
 | Solenoid driver | Relay or high-side driver board — 3 channels (S1, S2, SLU) — never drive solenoids directly from Arduino |
 | Flyback diodes | 1N4007 × 3 — one across each solenoid coil |
-| Paddle switches | Omron D2JW-01K11 microswitch × 2 — normally-open momentary, IP67, chassis mount — see [Paddle Switch Detail](#paddle-switch-detail) below |
+| Paddle trigger sensors | IR slot-type optocoupler (LM393-based) × 2 — generic/unbranded module, **[UNVERIFIED — verify supplier stock before relying on it]** — see [Paddle Trigger Sensor Detail](#paddle-trigger-sensor-detail) below |
 
 ## Vehicle Connector (choose by year)
 
@@ -35,11 +35,68 @@ All data is authoritative — sourced from ArduinoCode/README.md and ArduinoCode
 
 ---
 
-## Paddle Switch Detail
+## Paddle Trigger Sensor Detail
 
-### Selected Part: Omron D2JW-01K11
+### Selected Part: IR Slot-Type Optocoupler (LM393-based)
 
-**Current selection** — normally-open, momentary, straight lever, SPDT, IP67, chassis mount with solder lug wire leads. Replaces D2F-5L (see Alternatives for D2F-5L specs if needed).
+**Current selection (2026-08-17)** — replaces the Omron D2JW-01K11 mechanical switch (see
+[Former Selection](#former-selection--omron-d2jw-01k11-mechanical-switch-replaced) below) to
+eliminate mechanical wear. User-owned AliExpress module, item 3256804480682852 — **generic/
+unbranded, no manufacturer part number.** `[UNVERIFIED — verify supplier stock before builders
+rely on it]`. Treat as a known-working part on hand, not a stable sourced component like the
+Omron switches it replaces.
+
+#### Confirmed Electrical Specifications
+
+| Parameter | Value |
+|---|---|
+| Sensor type | Slot-type IR optocoupler (photointerrupter) — NOT Hall effect, no magnet sensitivity |
+| Comparator IC | LM393 |
+| Operating voltage | 3.3V–5V — compatible with both Uno and Mega 5V logic, no level-shifting needed |
+| Pins | VCC, GND, DO (digital output only — no AO on this module variant) |
+| Output type | Actively driven push-pull (module drives the line) — do **not** enable Arduino `INPUT_PULLUP` |
+| Output polarity | Slot unobstructed → DO LOW. Slot obstructed (tab in slot) → DO HIGH. |
+| Confirmed mechanical orientation (2026-08-17, user) | Tab sits **in** the slot at rest → DO HIGH at rest; paddle pull clears the tab → DO LOW |
+| IP rating | None — bare PCB, not automotive/vibration rated as shipped |
+
+Firmware wired to match: `PaddleShiftIndication.cpp` uses plain `INPUT` (not `INPUT_PULLUP`)
+and triggers on the same HIGH→LOW falling edge the old switch logic already expected — see
+`ArduinoCode/SYSTEM.md` pin table and the `paddle-shift-indication` skill.
+
+#### Mounting Note — Mechanical Requirement Differs Fundamentally From the Switch It Replaces
+
+This is **not** a lever-actuated switch geometry. The sensor needs an opaque tab to pass
+through a slot gap on the paddle mechanism (approximate gap ~5mm, not independently sourced —
+`[UNVERIFIED]`). **The paddle 3D model geometry needs redesign, not just a pocket depth
+tweak** — see `Models/README.md` for the current state of that redesign.
+
+Because the module ships as a bare, unrated PCB, carry these mitigations into the build:
+- Solder wires direct to the module pads — skip Dupont/header connectors
+- Strain-relief the leads at the PCB
+- Rigid-mount the board to the paddle body (no free-hanging PCB)
+- Conformal-coat or pot the board for vibration and moisture resistance
+
+#### Suitability Assessment
+
+| Category | Assessment |
+|---|---|
+| Mechanical durability | ✅ No moving parts to wear — eliminates the switch's mechanical life limit entirely |
+| Electrical load | ✅ Signal-only, low current — appropriate for Arduino digital inputs |
+| Voltage compatibility | ✅ 3.3V–5V — works unchanged on Uno, Mega, or Nano |
+| Environmental sealing | ⚠️ Bare PCB, no IP rating as shipped — requires the mitigations above |
+| Sourcing stability | ⚠️ Unbranded/generic AliExpress listing, no part number — verify stock before relying on it for a repeat build |
+| Mechanical integration | ⚠️ Requires new paddle body geometry (slot, not lever pocket) — not yet designed |
+
+> **Verdict:** Good electrical/durability upgrade over the mechanical switch, but it trades a
+> well-sourced, IP67-rated part for an unrated generic module that needs new paddle geometry
+> and physical protection measures before it's build-ready.
+
+---
+
+## Former Selection — Omron D2JW-01K11 (Mechanical Switch, Replaced)
+
+Retained for reference in case the project reverts to a mechanical switch. Replaced 2026-08-17
+by the IR slot optocoupler above to eliminate mechanical wear.
 
 #### Full Specifications
 
@@ -56,40 +113,18 @@ All data is authoritative — sourced from ArduinoCode/README.md and ArduinoCode
 | Differential travel | 0.7 mm (0.027") |
 | Overtravel | 1.4 mm (0.055") |
 | Mechanical life | 1,000,000 cycles |
-| Electrical life | **100,000 cycles** |
+| Electrical life | 100,000 cycles |
 | Operating temperature | −40°C to +85°C |
-| IP rating | **IP67** — dust tight, waterproof |
+| IP rating | IP67 — dust tight, waterproof |
 | Mounting | Chassis mount (mounts to paddle body directly) |
 | Termination | Solder lug — wire leads run to PCB/Arduino |
 
-#### Mounting Note
-
-The D2JW-01K11 is not a PCB through-hole part. It chassis-mounts to the paddle body with wire leads soldered to the lugs. The paddle 3D model switch pocket must position the lever 8.4 mm from the paddle contact surface (1.6 mm deeper than the former D2F-5L pocket at 6.8 mm).
-
-#### Motorsport Suitability
-
-| Category | Assessment |
-|---|---|
-| Mechanical durability | ✅ 1M cycles — excellent for paddle shifting |
-| Tactile feedback | ✅ Snap-action straight lever — 82 gf nearly identical to D2F-5L (80 gf) |
-| Electrical load | ✅ 100 mA signal rating is appropriate for Arduino digital inputs |
-| Temperature range | ✅ −40°C to +85°C covers all cabin environments |
-| Moisture/water | ✅ IP67 — fully dust tight and waterproof |
-| Electrical life | ✅ 100,000 cycles — ~13.7 yrs at 20 shifts/day |
-| Mounting | ✅ Chassis mount to paddle body is robust under vibration |
-
-> **Verdict:** Strong choice for street, off-road, and sustained use. 10× better electrical life and full IP67 sealing vs the former D2F-5L selection. Paddle feel is near-identical.
-
----
-
-## Paddle Switch Alternatives
-
-Evaluated alternatives to the selected D2JW-01K11, and the replaced D2F-5L for reference. All are normally-open momentary snap-action types.
+#### Alternatives Evaluated (Historical)
 
 | Part | IP Rating | Current Rating | Temp Range | Mechanical Life | Electrical Life | Notes |
 |---|---|---|---|---|---|---|
-| **Omron D2JW-01K11** *(selected)* | IP67 | 100 mA @ 30 VDC | −40°C to +85°C | 1,000,000 ops | 100,000 cycles | Straight lever, 82 gf, 8.4 mm op position, chassis mount, solder lug |
-| **Omron D2F-5L** *(replaced)* | IP40 | 5 A @ 250 VAC | −40°C to +85°C | 1,000,000 ops | 10,000 cycles | Former selection — through-hole PCB, hinge lever, 80 gf; replaced due to low electrical life and no water protection |
+| **Omron D2JW-01K11** *(former selection)* | IP67 | 100 mA @ 30 VDC | −40°C to +85°C | 1,000,000 ops | 100,000 cycles | Straight lever, 82 gf, 8.4 mm op position, chassis mount, solder lug |
+| **Omron D2F-5L** *(replaced earlier)* | IP40 | 5 A @ 250 VAC | −40°C to +85°C | 1,000,000 ops | 10,000 cycles | Through-hole PCB, hinge lever, 80 gf; replaced due to low electrical life and no water protection |
 | **Omron D2JW-011** | IP67 | 100 mA @ 30 VDC | −40°C to +85°C | 1,000,000 ops | 100,000 cycles | Pin plunger actuator, 250 gf — rejected; incompatible geometry and stiff feel |
 | **Omron D2JW-01K21** | IP67 | 100 mA @ 30 VDC | −40°C to +85°C | 1,000,000 ops | 100,000 cycles | Roller lever, 100 gf, 14.6 mm op position — superseded by D2JW-01K11 |
 | **Omron D2JW-AQ** | IP67 | 10 mA @ 14 VDC | −40°C to +85°C | 1,000,000 ops | not confirmed | Explicitly automotive-rated; signal-only current — unconfirmed specs |

@@ -4,7 +4,7 @@
 
 The XJ Cherokee uses a collapsible safety steering column with a tilt option on higher trim levels. The steering wheel is a 3-spoke design on most production vehicles.
 
-This section covers mounting considerations for the custom paddle switches that are the primary driver input for the transmission controller.
+This section covers mounting considerations for the custom paddle trigger sensors that are the primary driver input for the transmission controller.
 
 ---
 
@@ -27,9 +27,12 @@ This section covers mounting considerations for the custom paddle switches that 
 
 ---
 
-## Paddle Switch Mounting Options
+## Paddle Sensor Mounting Options
 
-The paddle switches are momentary push-button switches (active LOW) mounted to fire when the driver squeezes behind the steering wheel spokes.
+The paddles use an IR slot-type optocoupler sensor (LM393-based) — an opaque tab passes
+through a slot as the driver squeezes behind the steering wheel spokes. See the
+`hardware-bom` skill and `Models/README.md` for sensor electrical specs and the (not yet
+designed) slot pocket geometry.
 
 | Option | Description | Pros | Cons |
 |---|---|---|---|
@@ -43,20 +46,22 @@ The paddle switches are momentary push-button switches (active LOW) mounted to f
 
 ## Wiring Routing
 
-From the paddle switches to the Arduino:
+From the paddle sensors to the Arduino:
 
 - Route wires along the steering column, bundled with existing harness
 - Pass through or alongside the existing firewall grommet (driver side)
 - Keep signal wires (22–24 AWG, low current) away from the starter and alternator cables to minimise noise pickup
 - Use a grommet or loom wherever wires pass through sheet metal edges
 
-Signal wires carry only INPUT_PULLUP logic-level signals (~5V, < 1mA). Standard automotive hook-up wire is sufficient — no shielding required in typical installations.
+Each sensor needs three wires (VCC, GND, DO) rather than the two a switch would need.
+Signal wires carry logic-level signals (3.3–5V, low current). Standard automotive hook-up
+wire is sufficient — no shielding required in typical installations.
 
 ---
 
 ## Arduino Mounting Location
 
-The Arduino Mega 2560 (the controller brain) is typically mounted:
+The Arduino (Uno, Mega 2560, or Nano — the controller brain) is typically mounted:
 
 - Under the dash on the driver or passenger side (sheltered from weather and heat)
 - In the centre console area if available

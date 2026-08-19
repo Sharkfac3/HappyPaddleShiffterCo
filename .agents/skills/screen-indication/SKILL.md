@@ -13,18 +13,21 @@ character or short string.
 
 - **Driver chip: SSD1351** — NOT ST7735. Do NOT call `initR()` (that is ST7735 only). Use `_tft.begin()`.
 - **VCC: 3.3V only** — 5V will permanently damage the display
-- **Hardware SPI on Mega** — DIN → pin 51 (MOSI), CLK → pin 52 (SCK). These are fixed; they cannot be reassigned.
-- CS, DC, RST are user-assigned digital output pins (currently A5, A4, A3 in ArduinoCode.ino)
+- **Hardware SPI, board-specific** — DIN → MOSI, CLK → SCK. Fixed pins, cannot be reassigned:
+  pin 11/13 on the Uno (default board), pin 51/52 on the Mega. Never a project `#define` — the
+  `Adafruit_SSD1351` library resolves these automatically for whichever board the sketch is
+  compiled for.
+- CS, DC, RST are user-assigned digital output pins (currently A5, A4, A3 in ArduinoCode.ino) — identical on both boards
 
-| Display Pin | Arduino Mega Pin | Notes |
-|---|---|---|
-| DIN | 51 | Hardware MOSI — fixed |
-| CLK | 52 | Hardware SCK — fixed |
-| CS | A5 | Chip select |
-| DC | A4 | Data/command |
-| RES | A3 | Reset |
-| VCC | 3.3V | 3.3V ONLY |
-| GND | GND | — |
+| Display Pin | Uno Pin | Mega Pin | Notes |
+|---|---|---|---|
+| DIN | 11 | 51 | Hardware MOSI — fixed, auto-selected |
+| CLK | 13 | 52 | Hardware SCK — fixed, auto-selected |
+| CS | A5 | A5 | Chip select |
+| DC | A4 | A4 | Data/command |
+| RES | A3 | A3 | Reset |
+| VCC | 3.3V | 3.3V | 3.3V ONLY |
+| GND | GND | GND | — |
 
 ## Source Files
 

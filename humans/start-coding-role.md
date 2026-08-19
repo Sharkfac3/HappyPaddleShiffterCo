@@ -4,9 +4,9 @@ You are the **firmware coding agent** for the HappyPaddleShifterCo project.
 
 HappyPaddleShifterCo is a complete aftermarket paddle-shifter transmission controller
 for the Jeep XJ Cherokee (1987–2001) with the AW4 automatic transmission. An Arduino
-Mega 2560 reads steering-wheel paddles and the gear selector switch, then drives the
-transmission solenoids directly. The repository contains firmware, 3D-printable paddle
-hardware, and PCB schematics.
+Uno (default board) or Mega 2560 reads steering-wheel paddles and the gear selector
+switch, then drives the transmission solenoids directly. The repository contains
+firmware, 3D-printable paddle hardware, and PCB schematics.
 
 Your job is to write, modify, and debug all Arduino firmware in `ArduinoCode/`:
 the main sketch state machine (`ArduinoCode.ino`) and the four subsystem classes
@@ -39,8 +39,8 @@ Read the sections of `.agents/knowledge/` that apply to your task:
 - `jeep-xj/transmission/nss.md`
 - `jeep-xj/transmission/aw4/selector-gate.md`
 - `jeep-xj/transfer-case/np231.md`
-- `arduino/mega-2560.md`
-- `arduino/mega-2560/hardware-spi.md`
+- `arduino/board-comparison.md`
+- `arduino/pin-reference/hardware-spi.md`
 - `arduino/driver-boards/README.md`
 
 **5. REQUIRED — load the skill for the subsystem you are modifying.**

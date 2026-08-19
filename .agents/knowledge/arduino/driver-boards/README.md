@@ -2,7 +2,7 @@
 
 ## Why an External Driver Board is Required
 
-The AW4 solenoids run at **12V** and draw up to **2A each**. The Arduino Mega 2560 I/O pins have an absolute maximum current of **40mA** (20mA recommended). Connecting a solenoid directly to an Arduino pin would immediately destroy the ATmega2560.
+The AW4 solenoids run at **12V** and draw up to **2A each**. Arduino I/O pins (Uno, Nano, or Mega) have an absolute maximum current of **40mA** (20mA recommended). Connecting a solenoid directly to an Arduino pin would immediately destroy the microcontroller.
 
 An external driver board sits between the Arduino's 5V logic output and the 12V solenoid load:
 - Accepts 5V logic signal from the Arduino
@@ -78,14 +78,18 @@ The flyback diode clamps the inductive spike when the solenoid de-energises to a
 ## Wiring Summary
 
 ```
-Arduino Mega       Driver Board          AW4 Solenoids
-(5V logic out)     (12V switching)       (12V loads)
+Arduino (Uno/Nano/Mega)  Driver Board          AW4 Solenoids
+(5V logic out)       (12V switching)       (12V loads)
 
-Pin 11 ─────────→  CH1 IN               CH1 OUT ──[1N4007]──→ S1 coil ──→ GND
-Pin 12 ─────────→  CH2 IN               CH2 OUT ──[1N4007]──→ S2 coil ──→ GND
-Pin 13 ─────────→  CH3 IN               CH3 OUT ──[1N4007]──→ SLU coil ──→ GND
+Pin A0 ─────────→  CH1 IN               CH1 OUT ──[1N4007]──→ S1 coil ──→ GND
+Pin A1 ─────────→  CH2 IN               CH2 OUT ──[1N4007]──→ S2 coil ──→ GND
+Pin A2 ─────────→  CH3 IN               CH3 OUT ──[1N4007]──→ SLU coil ──→ GND
 GND ─────────────→ Driver GND
                    12V IN ←──── Fused 12V supply (10A)
 ```
 
-The Arduino's 5V and GND are independent of the 12V solenoid supply. The only shared connection is GND — the Arduino GND must be connected to the same ground reference as the driver board and solenoids (chassis ground).
+Pins A0/A1/A2 are identical on all three boards — this was a deliberate choice to keep solenoid
+wiring board-agnostic (see `.agents/DECISIONS.md` ADR-008/ADR-009). The Arduino's 5V and GND
+are independent of the 12V solenoid supply. The only shared connection is GND — the Arduino
+GND must be connected to the same ground reference as the driver board and solenoids
+(chassis ground).

@@ -24,11 +24,15 @@ output states for the AW4 / A340E automatic transmission.
 
 ## Pin Assignments
 
+Identical on Uno and Mega — moved to A0–A2 specifically so they don't collide with the
+Uno's fixed hardware-SPI pins (11/13, used by the display). See `.agents/DECISIONS.md`
+ADR-008/ADR-009.
+
 | Arduino Pin | Solenoid | Direction |
 |---|---|---|
-| 11 | S1 | OUTPUT (to driver board) |
-| 12 | S2 | OUTPUT (to driver board) |
-| 13 | SLU | OUTPUT (to driver board) |
+| A0 | S1 | OUTPUT (to driver board) |
+| A1 | S2 | OUTPUT (to driver board) |
+| A2 | SLU | OUTPUT (to driver board) |
 
 ## Solenoid Truth Table (verified — AW4 / A340E)
 

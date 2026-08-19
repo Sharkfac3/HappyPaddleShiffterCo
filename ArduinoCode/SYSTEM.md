@@ -1,9 +1,17 @@
 # ArduinoCode — System Specification
-## Jeep XJ Cherokee AW4 Transmission Controller (1987–2001), Arduino Mega 2560
+## Jeep XJ Cherokee AW4 Transmission Controller (1987–2001), Arduino Uno (default), Mega 2560, or Nano
 
 This is the authoritative technical reference for the firmware.
 It covers architecture, pin assignments, hardware wiring, the state machine, and the solenoid truth table.
 For build/flash instructions see [`README.md`](README.md). For research sources see [`SOURCES.md`](../SOURCES.md).
+
+### Supported Boards
+
+Same firmware, same `#define` pin numbers, same wiring — works unchanged on any of the three
+boards, no `#ifdef` branching. Solenoid outputs sit on A0–A2 specifically so they don't collide with
+the Uno's fixed hardware-SPI pins (MOSI=11, SCK=13); the Mega's hardware SPI (MOSI=51, SCK=52)
+was never on those pins either. The display's DIN/CLK hardware-SPI pins are auto-selected by
+the SPI library per board — not a `#define` in this project. See `DECISIONS.md` ADR-008/ADR-009.
 
 ---
 
@@ -26,20 +34,20 @@ selected gear: `int currentGear` (1–5) declared in `ArduinoCode.ino`.
 
 | Pin | Direction | Mode | Connected to |
 |---|---|---|---|
-| 2 | INPUT | INPUT_PULLUP active LOW | Shift Up paddle → GND |
-| 3 | INPUT | INPUT_PULLUP active LOW | Shift Down paddle → GND |
+| 2 | INPUT | plain INPUT — sensor drives line, tab-in-slot-at-rest = HIGH | Shift Up IR slot optocoupler DO |
+| 3 | INPUT | plain INPUT — sensor drives line, tab-in-slot-at-rest = HIGH | Shift Down IR slot optocoupler DO |
 | 4 | INPUT | INPUT_PULLUP active LOW | NSS pin B (B↔C — Park/Neutral) → GND |
 | 5 | INPUT | INPUT_PULLUP active LOW | NSS pin E (A↔E — Reverse) → GND |
 | 6 | INPUT | INPUT_PULLUP active LOW | NSS pin G (A↔G — 3rd hold) → GND |
 | 7 | INPUT | INPUT_PULLUP active LOW | NSS pin H (A↔H — 1-2 hold) → GND |
-| 11 | OUTPUT | — | S1 solenoid via relay/driver board |
-| 12 | OUTPUT | — | S2 solenoid via relay/driver board |
-| 13 | OUTPUT | — | SLU solenoid via relay/driver board |
-| 51 | OUTPUT | — | Display DIN — hardware MOSI, fixed on Mega |
-| 52 | OUTPUT | — | Display CLK — hardware SCK, fixed on Mega |
+| A0 | OUTPUT | — | S1 solenoid via relay/driver board |
+| A1 | OUTPUT | — | S2 solenoid via relay/driver board |
+| A2 | OUTPUT | — | SLU solenoid via relay/driver board |
 | A3 | OUTPUT | — | Display RES |
 | A4 | OUTPUT | — | Display DC |
 | A5 | OUTPUT | — | Display CS |
+| MOSI (hw SPI) | OUTPUT | — | Display DIN — pin 11 on Uno, pin 51 on Mega, fixed, auto-selected by SPI library |
+| SCK (hw SPI) | OUTPUT | — | Display CLK — pin 13 on Uno, pin 52 on Mega, fixed, auto-selected by SPI library |
 
 ---
 
@@ -88,6 +96,8 @@ Use a multimeter to confirm continuity for each position before connecting to th
 Solenoids are driven via an external relay or high-side driver board — **never directly from Arduino pins.**
 Solenoids run on 12V and draw up to 2A. Flyback diodes (1N4007) are required across each coil.
 SLU is **digital on/off** — not PWM on this AW4 variant.
+S1/S2/SLU outputs are on A0/A1/A2 (see Pin Assignments above) — moved off 11/12/13 so they
+don't collide with the Uno's fixed hardware-SPI pins.
 
 | Gear | Description | S1 | S2 | SLU |
 |---|---|---|---|---|
@@ -142,12 +152,16 @@ active before Neutral — no gear is lost.
 ## Debounce
 
 All inputs use 50ms timestamp-based debounce (non-blocking).
-All input pins are `INPUT_PULLUP`. Triggers fire on falling edge (HIGH→LOW = active/pressed).
+NSS pins (4–7) are `INPUT_PULLUP`. Paddle sensor pins (2–3) are plain `INPUT` —
+the IR slot optocoupler drives its own output, INPUT_PULLUP would fight it.
+All triggers fire on falling edge (HIGH→LOW = active/pressed).
 
 ---
 
 ## Display
 
 WaveShare 1.5″ RGB OLED, SSD1351 driver chip, 128×128 pixels, **3.3V only**.
-DIN → pin 51, CLK → pin 52 (hardware SPI on Mega — fixed, cannot be reassigned).
+DIN → hardware MOSI, CLK → hardware SCK — fixed per board, cannot be reassigned
+(Uno: 11/13, Mega: 51/52; the `Adafruit_SSD1351` library selects the right pins
+automatically for whichever board the sketch is compiled for).
 Library: `Adafruit_SSD1351` + `Adafruit_GFX` (install via Library Manager).

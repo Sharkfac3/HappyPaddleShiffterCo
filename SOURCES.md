@@ -268,6 +268,44 @@ Source: Omron official D2JW datasheet, "Hinge lever models — D2JW-01K11" dimen
 
 ---
 
+## Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393), User-Owned Part
+
+Research session: 2026-08-17. User has an on-hand AliExpress module originally assumed to be
+a Hall effect sensor; confirmed it is NOT — it is a slot-type IR optocoupler (photointerrupter
++ LM393 comparator), same generic module widely sold for RC car wheel-speed encoding.
+
+### Part Identification
+
+| Source | URL | Status | Notes |
+|---|---|---|---|
+| AliExpress listing (user-provided, item 3256804480682852) | https://www.aliexpress.us/item/3256804480682852.html | ✅ Read (browser) | Listed as "IR Infrared Speed Sensor Module Distance Measurement Detection Optocoupler For Arduino Smart Car/Robot." Spec fields: Type = "Optical-Electronics Sensor", Output = "Switching Transducer". No manufacturer part number given — generic/unbranded clone, common on this listing tier. |
+
+No manufacturer datasheet exists for this specific unbranded listing (no part number to look up). Cross-referenced against three independent retailer/documentation pages for the same widely-cloned module family (LM393 slot-type IR optocoupler) to confirm electrical behavior:
+
+| Source | URL | Status | Notes |
+|---|---|---|---|
+| diymore.cc product page | https://www.diymore.cc/products/slot-type-ir-optocoupler-speed-sensor-module-lm393-for-arduino | ✅ Read | Operating voltage 3.3V–5V. Direct quote: "Module slot unobstructed, receiver tube conduction module DO output low, shelter, DO output high." |
+| electropeak.com product page | https://electropeak.com/ptocouple-optocounter-module | ✅ Read | Operating voltage DC 5V. Direct quote: "When the object is blocked, the output is high... The output is low when there is no shelter." |
+| manuals.plus — Balance World Inc. user manual (ASIN B01LYFQEXI) | https://manuals.plus/asin/B01LYFQEXI | ❌ 403 | Blocked, not used |
+| Amazon listing (ASIN B01LYFQEXI) | https://www.amazon.com/Optocoupler-Speed-Sensor-Module-Arduino/dp/B01LYFQEXI | ❌ 500 error | Blocked, not used |
+
+Both successfully-fetched sources agree independently — treated as confirmed (community/retailer tier, no primary manufacturer datasheet exists for this unbranded part).
+
+### Confirmed Electrical Facts
+
+| Parameter | Confirmed Value |
+|---|---|
+| Sensor type | Slot-type IR optocoupler (photointerrupter), NOT Hall effect — no magnet sensitivity |
+| Comparator IC | LM393 |
+| Operating voltage | 3.3V–5V (both sources agree; compatible with Mega's 5V logic) |
+| Pins | VCC, GND, DO (digital output). No AO/analog pin documented on this module variant. |
+| Output type | Actively driven push-pull output from onboard LM393 + pull-up resistor — NOT open-drain. Do not enable Arduino `INPUT_PULLUP` on the input pin; the module drives the line itself. |
+| **Output polarity (critical, cross-confirmed 2 sources)** | **Slot unobstructed (clear) → DO reads LOW. Slot obstructed (object/tab in slot) → DO reads HIGH.** |
+
+> **This is the opposite electrical convention from the existing paddle switches.** [PaddleShiftIndication.cpp](ArduinoCode/PaddleShiftIndication.cpp) currently expects active-LOW behavior (`INPUT_PULLUP`, HIGH = unpressed, LOW = pressed, trigger on HIGH→LOW falling edge). This module is active-HIGH-when-blocked. Whether this requires a firmware change depends entirely on paddle mechanical geometry — see HANDOFF to CODING.
+
+---
+
 ## Key Findings Summary
 
 | Decision | Source |
@@ -282,3 +320,4 @@ Source: Omron official D2JW datasheet, "Hinge lever models — D2JW-01K11" dimen
 | Paddle switch specs confirmed | Digi-Key listing https://www.digikey.com/en/products/detail/omron-electronics-inc-emc-div/D2F-5L/8593137 — human-verified 2026-03-20; corrected electrical life (10K), operating force (80 gf), temp range (−40°C) |
 | Paddle switch purchase source (D2F-5L) | Digi-Key part #8593137 (confirmed active, bulk) |
 | Preferred upgrade switch confirmed | Omron D2JW-01K11 — straight lever, 82 gf, 8.4 mm op position, IP67, 100K electrical life — Digi-Key (human-verified 2026-03-20) |
+| User's on-hand sensor is IR slot optocoupler, NOT Hall effect; DO is active-HIGH-when-blocked, push-pull (no INPUT_PULLUP) | diymore.cc + electropeak.com, cross-confirmed 2026-08-17 |

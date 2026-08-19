@@ -4,8 +4,9 @@
 
 A complete aftermarket paddle-shifter transmission controller for the Jeep XJ Cherokee (1987–2001)
 with the AW4 automatic transmission (also known as the A340E). Steering-wheel paddles replace the
-factory TCU. The driver controls gear selection directly; an Arduino Mega 2560 reads the selector
-position, the paddles, and drives the transmission solenoids accordingly.
+factory TCU. The driver controls gear selection directly; an Arduino board (Uno — default —
+Mega 2560, or Nano, all supported) reads the selector position, the paddles, and drives the
+transmission solenoids accordingly.
 
 The repository contains firmware, 3D-printable paddle hardware, and PCB schematics.
 
@@ -48,8 +49,8 @@ sub-section before starting work — do not re-derive facts already documented t
     body-chassis/
       steering-column.md     — Paddle mounting options, airbag years, wiring routing
   arduino/
-    mega-2560.md             — Pin assignments, hardware SPI, memory constraints
-    mega-2560/               — Deeper detail: pinout, hardware-spi, specs
+    board-comparison.md      — Uno vs Mega vs Nano comparison: pin assignments, hardware SPI, memory constraints
+    pin-reference/           — Deeper detail: pinout, hardware-spi, specs
     driver-boards/           — Relay vs high-side driver, flyback diodes, wiring
 ```
 

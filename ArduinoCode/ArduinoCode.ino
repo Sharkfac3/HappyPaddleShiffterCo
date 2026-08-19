@@ -6,6 +6,13 @@
 // Reads selector position from the AW4 neutral safety switch (NSS)
 // wired directly to the Arduino — no factory TCU involved.
 //
+// === SUPPORTED BOARDS: Arduino Uno (default), Mega 2560, or Nano ===
+//   Same firmware, same pin numbers, same wiring on all three — no #ifdef needed.
+//   Solenoid outputs live on A0-A2 (not 11/12/13) specifically so they don't
+//   collide with the Uno/Nano's fixed hardware-SPI pins (MOSI=11, SCK=13). The
+//   Mega's hardware SPI (MOSI=51, SCK=52) was never on those pins, so this
+//   works unchanged there too. See DECISIONS.md ADR-008/ADR-009.
+//
 // === AW4 NSS WIRING ('87-'96, 8-pin Deutsch connector, pins A-H) ===
 //
 // The AW4 NSS is a CONTINUITY switch — it closes pin pairs per position.
@@ -28,17 +35,21 @@
 // '97-'01 connector: different physical connector. Verify pinout from
 // '97-'01 FSM before wiring. Same INPUT_PULLUP / active LOW logic applies.
 //
-// === PADDLE SWITCHES ===
-//   Pin 2 → Shift Up   (active LOW, wired to GND, INPUT_PULLUP)
-//   Pin 3 → Shift Down (active LOW, wired to GND, INPUT_PULLUP)
+// === PADDLE SENSORS (IR slot optocoupler, LM393 — NOT mechanical switches) ===
+//   Pin 2 → Shift Up   (plain INPUT — sensor output is actively driven, no INPUT_PULLUP)
+//   Pin 3 → Shift Down (plain INPUT — sensor output is actively driven, no INPUT_PULLUP)
+//   Metal tab sits IN the sensor slot at rest (DO = HIGH). Paddle pull clears
+//   the tab (DO = LOW) — same HIGH->LOW falling edge the debounce logic expects.
+//   Source: SOURCES.md "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393)".
 //
 // === SOLENOID OUTPUTS (via relay/driver board — NOT direct) ===
-//   Pin 11 → S1  |  Pin 12 → S2  |  Pin 13 → SLU
+//   Pin A0 → S1  |  Pin A1 → S2  |  Pin A2 → SLU
 //   A340/AW4 solenoids run 12V, up to 2A each. Use flyback diodes (1N4007).
+//   (Moved off 11/12/13 to keep the Uno's hardware SPI pins free — see above.)
 //
 // === DISPLAY: WaveShare 1.5" RGB OLED (SSD1351, 128x128, 3.3V ONLY) ===
-//   DIN  → Mega pin 51 (hardware MOSI — fixed)
-//   CLK  → Mega pin 52 (hardware SCK  — fixed)
+//   DIN  → hardware MOSI (Uno pin 11 / Mega pin 51 — fixed, auto-selected by SPI lib)
+//   CLK  → hardware SCK  (Uno pin 13 / Mega pin 52 — fixed, auto-selected by SPI lib)
 //   CS   → A5  |  DC → A4  |  RES → A3
 //
 // === VERIFIED AW4 SOLENOID MAPPING ===
@@ -66,11 +77,12 @@
 #define PIN_NSS_12      7   // 1-2 hold       (A<->H)
 
 // --- Solenoid Output Pins (via relay/driver board) ---
-#define PIN_S1          11
-#define PIN_S2          12
-#define PIN_SLU         13
+// A0-A2, not 11/12/13 — those are the Uno's fixed hardware-SPI pins (MOSI/SCK).
+#define PIN_S1          A0
+#define PIN_S2          A1
+#define PIN_SLU         A2
 
-// --- Display SPI Pins (DIN→51, CLK→52 fixed on Mega) ---
+// --- Display SPI Pins (DIN/CLK are hardware SPI, fixed per-board, auto-selected) ---
 #define PIN_LCD_CS      A5
 #define PIN_LCD_DC      A4
 #define PIN_LCD_RST     A3

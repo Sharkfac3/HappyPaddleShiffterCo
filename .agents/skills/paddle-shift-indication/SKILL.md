@@ -5,19 +5,21 @@ description: Modify or debug the PaddleShiftIndication class — the debounced p
 
 # Skill: paddle-shift-indication
 
-Monitors two momentary paddle switches (shift up, shift down) and exposes
-debounced one-shot request flags to `ArduinoCode.ino`.
+Monitors two paddle-mounted IR slot optocoupler sensors (shift up, shift down,
+LM393-based — NOT mechanical switches, NOT Hall effect) and exposes debounced
+one-shot request flags to `ArduinoCode.ino`.
 
 ## Key Electrical Facts
 
-- Both switches wired **active LOW**: one terminal to an Arduino `INPUT_PULLUP` pin, other terminal to GND
-- Unpressed = HIGH, pressed = LOW
+- Sensor DO output is **actively driven (push-pull)** — pins are plain `INPUT`, NOT `INPUT_PULLUP`. Enabling the internal pull-up would fight the sensor's own driver.
+- Metal tab sits **IN the slot at rest** → DO reads HIGH. Paddle pull clears the tab from the slot → DO reads LOW. Same HIGH→LOW falling edge the debounce/edge-detection logic already expects.
 - Debounce is timestamp-based (non-blocking) — 50ms settle window
+- Source: `SOURCES.md` → "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393), User-Owned Part"
 
 | Function | Arduino Pin | Mode |
 |---|---|---|
-| Shift Up | 2 | INPUT_PULLUP, active LOW |
-| Shift Down | 3 | INPUT_PULLUP, active LOW |
+| Shift Up | 2 | plain INPUT — sensor-driven, rest = HIGH |
+| Shift Down | 3 | plain INPUT — sensor-driven, rest = HIGH |
 
 ## Source Files
 
