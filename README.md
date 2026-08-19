@@ -13,7 +13,7 @@ This repository contains everything needed to build and install the system: firm
 
 | Folder | What it contains |
 |---|---|
-| [`ArduinoCode/`](ArduinoCode/README.md) | Arduino Uno (default), Mega 2560, or Nano firmware — the transmission controller |
+| [`Firmware/`](Firmware/README.md) | Arduino Uno (default), Mega 2560, or Nano firmware — the transmission controller |
 | [`Models/`](Models/README.md) | 3D-printable STL files for the steering wheel paddle hardware |
 | [`Schematics/`](Schematics/README.md) | PCB schematics and wiring diagrams |
 
@@ -21,7 +21,7 @@ This repository contains everything needed to build and install the system: firm
 
 ## Getting Started
 
-1. **Read [`ArduinoCode/README.md`](ArduinoCode/README.md)** — hardware requirements, wiring, and flash instructions
+1. **Read [`Firmware/README.md`](Firmware/README.md)** — hardware requirements, wiring, and flash instructions
 2. **Read [`Models/README.md`](Models/README.md)** — print settings and hardware BOM for the paddles
 3. **Read [`Schematics/README.md`](Schematics/README.md)** — PCB layout and connector pinouts
 

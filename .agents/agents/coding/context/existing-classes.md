@@ -8,7 +8,7 @@ load the corresponding skill from `.agents/skills/`.
 
 ## PaddleShiftIndication
 
-**Files:** `ArduinoCode/PaddleShiftIndication.h/.cpp`
+**Files:** `Firmware/PaddleShiftIndication.h/.cpp`
 **Skill:** `.agents/skills/paddle-shift-indication/SKILL.md`
 
 ```cpp
@@ -26,7 +26,7 @@ Flags are consumed-and-cleared by the accessor — do not reset manually.
 
 ## GearSelectorSwitch
 
-**Files:** `ArduinoCode/GearSelectorSwitch.h/.cpp`
+**Files:** `Firmware/GearSelectorSwitch.h/.cpp`
 **Skill:** `.agents/skills/gear-selector-switch/SKILL.md`
 
 ```cpp
@@ -52,7 +52,7 @@ UNKNOWN fires when multiple pins are simultaneously LOW (mid-travel transition).
 
 ## SolenoidMapper
 
-**Files:** `ArduinoCode/SolenoidMapper.h/.cpp`
+**Files:** `Firmware/SolenoidMapper.h/.cpp`
 **Skill:** `.agents/skills/solenoid-mapper/SKILL.md`
 
 ```cpp
@@ -78,7 +78,7 @@ Key: 4th (all off) is the electrical failsafe. Solenoids run on 12V via driver b
 
 ## ScreenIndication
 
-**Files:** `ArduinoCode/ScreenIndication.h/.cpp`
+**Files:** `Firmware/ScreenIndication.h/.cpp`
 **Skill:** `.agents/skills/screen-indication/SKILL.md`
 
 ```cpp

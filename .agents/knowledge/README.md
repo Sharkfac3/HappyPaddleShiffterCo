@@ -31,7 +31,7 @@ knowledge/
     body-chassis/
       README.md              — Body/chassis section index
       steering-column.md     — Paddle mounting options, airbag years, wiring routing
-  arduino/
+  microcontroller/
     board-comparison.md      — Uno vs Nano vs Mega 2560 comparison, how to choose a board
     pin-reference/           — This project's pin assignments, hardware SPI, memory (all boards)
     driver-boards/           — Relay vs high-side driver, flyback diodes, wiring

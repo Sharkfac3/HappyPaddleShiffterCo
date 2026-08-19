@@ -302,7 +302,7 @@ Both successfully-fetched sources agree independently — treated as confirmed (
 | Output type | Actively driven push-pull output from onboard LM393 + pull-up resistor — NOT open-drain. Do not enable Arduino `INPUT_PULLUP` on the input pin; the module drives the line itself. |
 | **Output polarity (critical, cross-confirmed 2 sources)** | **Slot unobstructed (clear) → DO reads LOW. Slot obstructed (object/tab in slot) → DO reads HIGH.** |
 
-> **This is the opposite electrical convention from the existing paddle switches.** [PaddleShiftIndication.cpp](ArduinoCode/PaddleShiftIndication.cpp) currently expects active-LOW behavior (`INPUT_PULLUP`, HIGH = unpressed, LOW = pressed, trigger on HIGH→LOW falling edge). This module is active-HIGH-when-blocked. Whether this requires a firmware change depends entirely on paddle mechanical geometry — see HANDOFF to CODING.
+> **This is the opposite electrical convention from the existing paddle switches.** [PaddleShiftIndication.cpp](Firmware/PaddleShiftIndication.cpp) currently expects active-LOW behavior (`INPUT_PULLUP`, HIGH = unpressed, LOW = pressed, trigger on HIGH→LOW falling edge). This module is active-HIGH-when-blocked. Whether this requires a firmware change depends entirely on paddle mechanical geometry — see HANDOFF to CODING.
 
 ---
 

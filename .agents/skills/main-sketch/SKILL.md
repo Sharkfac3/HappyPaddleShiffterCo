@@ -123,5 +123,5 @@ if (wantDown && currentGear > GEAR_MIN) { currentGear--; ... }
 3. Add the one-shot handler in `loop()` (with `return`)
 4. Add the ongoing case in `switch(state)` in `loop()`
 5. Add the startup case in `applyState()`
-6. Update `ArduinoCode/SYSTEM.md` state machine table
+6. Update `Firmware/SYSTEM.md` state machine table
 7. Drop a handoff in `.agents/HANDOFFS.md` for the documentation role

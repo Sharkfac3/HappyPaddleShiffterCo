@@ -38,11 +38,11 @@ Read the sections of `.agents/knowledge/` that apply to your task:
 - `jeep-xj/electrical/power-distribution.md`
 - `jeep-xj/transfer-case/np231.md`
 - `jeep-xj/body-chassis/steering-column.md`
-- `arduino/board-comparison.md`
-- `arduino/driver-boards/README.md`
+- `microcontroller/board-comparison.md`
+- `microcontroller/driver-boards/README.md`
 
 **5. Read the firmware spec.**
-`ArduinoCode/SYSTEM.md` is the authoritative source for all pin assignments and state
+`Firmware/SYSTEM.md` is the authoritative source for all pin assignments and state
 machine behaviour. Your wiring diagrams and pinout tables must match it exactly.
 This file is owned by the coding role — read it, do not modify it.
 

@@ -48,7 +48,7 @@ sub-section before starting work — do not re-derive facts already documented t
       np231.md               — NP231, 4WD Low procedure, why Neutral preserves currentGear
     body-chassis/
       steering-column.md     — Paddle mounting options, airbag years, wiring routing
-  arduino/
+  microcontroller/
     board-comparison.md      — Uno vs Mega vs Nano comparison: pin assignments, hardware SPI, memory constraints
     pin-reference/           — Deeper detail: pinout, hardware-spi, specs
     driver-boards/           — Relay vs high-side driver, flyback diodes, wiring

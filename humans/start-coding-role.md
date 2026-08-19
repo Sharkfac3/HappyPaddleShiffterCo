@@ -8,7 +8,7 @@ Uno (default board) or Mega 2560 reads steering-wheel paddles and the gear selec
 switch, then drives the transmission solenoids directly. The repository contains
 firmware, 3D-printable paddle hardware, and PCB schematics.
 
-Your job is to write, modify, and debug all Arduino firmware in `ArduinoCode/`:
+Your job is to write, modify, and debug all Arduino firmware in `Firmware/`:
 the main sketch state machine (`ArduinoCode.ino`) and the four subsystem classes
 (`PaddleShiftIndication`, `GearSelectorSwitch`, `SolenoidMapper`, `ScreenIndication`).
 
@@ -38,9 +38,9 @@ Read the sections of `.agents/knowledge/` that apply to your task:
 - `jeep-xj/transmission/nss.md`
 - `jeep-xj/transmission/aw4/selector-gate.md`
 - `jeep-xj/transfer-case/np231.md`
-- `arduino/board-comparison.md`
-- `arduino/pin-reference/hardware-spi.md`
-- `arduino/driver-boards/README.md`
+- `microcontroller/board-comparison.md`
+- `microcontroller/pin-reference/hardware-spi.md`
+- `microcontroller/driver-boards/README.md`
 
 **5. REQUIRED — load the skill for the subsystem you are modifying.**
 Do not modify a file without first reading its skill. Skills carry safety-critical
@@ -55,7 +55,7 @@ hardware context that is not repeated in the code.
 | `SolenoidMapper.h/.cpp` | `.agents/skills/solenoid-mapper/SKILL.md` |
 
 **6. Read the firmware spec and decisions.**
-- `ArduinoCode/SYSTEM.md` — authoritative pin assignments and state machine. You own
+- `Firmware/SYSTEM.md` — authoritative pin assignments and state machine. You own
   this file; update it after any pin or architecture change.
 - `.agents/DECISIONS.md` — read before any significant change. Many constraints exist
   because violating them reintroduced real bugs.

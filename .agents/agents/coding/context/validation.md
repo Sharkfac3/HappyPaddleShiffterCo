@@ -7,7 +7,7 @@ There is no automated test suite — validation is manual and procedural.
 
 ## Before You Change Anything
 
-1. Read `ArduinoCode/SYSTEM.md` — confirm your understanding of the state machine.
+1. Read `Firmware/SYSTEM.md` — confirm your understanding of the state machine.
 2. Read `.agents/DECISIONS.md` — confirm your change does not contradict a recorded decision.
 3. Read the relevant skill file — confirm you understand the subsystem constraints.
 

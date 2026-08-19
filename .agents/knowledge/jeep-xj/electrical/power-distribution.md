@@ -2,7 +2,7 @@
 
 ## Controller Power Supply
 
-The Arduino board (Uno default, Mega or Nano supported — see `.agents/knowledge/arduino/board-comparison.md`)
+The Arduino board (Uno default, Mega or Nano supported — see `.agents/knowledge/microcontroller/board-comparison.md`)
 and logic-level components (display, NSS inputs, paddle inputs) run at **5V** (Arduino
 internal regulator) or **3.3V** (Arduino 3.3V output pin).
 

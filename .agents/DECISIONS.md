@@ -159,7 +159,7 @@ on the Uno's fixed hardware-SPI pins.
 **Change applied:** `PIN_S1/PIN_S2/PIN_SLU` moved from digital 11/12/13 to A0/A1/A2 in
 `ArduinoCode.ino`. This frees the Uno's hardware SPI (MOSI=11, SCK=13) for the display.
 The Mega's hardware SPI (MOSI=51, SCK=52) was never on 11/12/13, so it is unaffected —
-the same firmware and wiring now work unchanged on both boards. See `ArduinoCode/SYSTEM.md`
+the same firmware and wiring now work unchanged on both boards. See `Firmware/SYSTEM.md`
 for the updated pin table.
 
 **Why one firmware image works for both:** The display's DIN/CLK hardware-SPI pins are
@@ -175,7 +175,7 @@ against `arduino:avr:uno` (flash 14070B/43%, SRAM 864B/42%, 2026-08-17), `arduin
 flash is 30720B not 32256B; verified against both the `atmega328` and `atmega328old` bootloader
 options, 2026-08-19) — not yet flashed/tested on physical hardware for any of the three.
 
-**Consequence for documentation:** `ArduinoCode/README.md`, `.agents/knowledge/arduino/`,
+**Consequence for documentation:** `Firmware/README.md`, `.agents/knowledge/microcontroller/`,
 and the `solenoid-mapper`/`screen-indication`/`main-sketch` skills still describe the old
 Mega-only, pins-11/12/13 setup — flagged to the documentation role via `HANDOFFS.md`.
 
@@ -208,3 +208,39 @@ sourced — see `[PENDING]` HANDOFFS entry to Research.
 
 **Not yet done:** Part number selection/verification, BOM entry, updated wiring diagram
 showing the buck converter stage.
+
+---
+
+## ADR-011: Vendor-scoped folder names renamed to board-agnostic names (multi-controller pivot, chunk 02)
+
+**Decision:** `ArduinoCode/` (repo root) renamed to `Firmware/`; `.agents/knowledge/arduino/`
+renamed to `.agents/knowledge/microcontroller/`. Both via `git mv`, history preserved.
+
+**Reason:** Part of a sequence generalizing the agent scaffolding so a future non-Arduino
+controller board wouldn't require rebuilding it (see `humans/multi-controller-pivot/`). Both
+old names actively misled: a future agent working on a non-Arduino board would see
+`ArduinoCode/`/`knowledge/arduino/` and assume neither applied, even though most underlying
+content (relay/driver wiring, SPI pin tables, state-machine architecture) was already
+board-agnostic — only the folder *names* were vendor-scoped. Target names confirmed by the
+human operator (2026-08-19) rather than guessed, per the chunk's own guardrail against
+unilaterally choosing low-reversibility names.
+
+**Date:** 2026-08-19.
+
+**Scope:** Rename and reference-fix only — every live reference to the old paths across the
+repo (`AGENTS.md`, `CLAUDE.md`, `.agents/WORKFLOW.md`, both role `AGENTS.md` files, role
+`context/` files, all six `.agents/skills/*/SKILL.md`, `.agents/knowledge/**`,
+`humans/start-*-role.md`, `scripts/generate_bom.py`, `README.md`, `Schematics/README.md`,
+`Models/README.md`, `SOURCES.md`) was updated to the new paths and `scripts/generate_bom.py`
+was re-run to confirm it still functions (regenerated `BOM.xlsx` — only the source-citation
+strings changed). Historical/dated entries in `.agents/HANDOFFS.md`, the ADR-008 quote above,
+and the `humans/multi-controller-pivot/` chunk files themselves were deliberately left
+referencing the old names — they are accurate records of what those names were at the time,
+not live pointers. No prose inside the renamed folders was generalized beyond the folders'
+own title lines (`Firmware/README.md`, `Firmware/SYSTEM.md`) — deeper Arduino-specific
+rewording is chunk 03 (coding-role identity) and chunk 04 (root docs), not this chunk.
+
+**Consequence:** If a stale reference to `ArduinoCode/` or `.agents/knowledge/arduino/` turns
+up anywhere this sweep missed, it's leftover from before this rename — update it to
+`Firmware/` / `.agents/knowledge/microcontroller/` respectively rather than treating it as
+intentional.

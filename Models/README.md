@@ -2,7 +2,7 @@
 
 > **Applies to:** HappyPaddleShifterCo — Jeep XJ Cherokee AW4 paddle shifter controller
 > **Last verified:** 2026-08-17
-> **Related files:** `ArduinoCode/SYSTEM.md` (pin assignments), `Schematics/README.md` (wiring), `SOURCES.md` (component sources)
+> **Related files:** `Firmware/SYSTEM.md` (pin assignments), `Schematics/README.md` (wiring), `SOURCES.md` (component sources)
 >
 > **2026-08-17: Paddle trigger sensor changed.** This document previously covered the Omron
 > D2JW-01K11 mechanical switch. The project has moved to an IR slot-type optocoupler sensor
@@ -157,7 +157,7 @@ to the Arduino (Uno, Mega, or Nano — same pin numbers on all three). Connect a
 Wire GND on each sensor to Arduino GND, VCC to Arduino 5V (or 3.3V — module accepts either).
 Wire DO to the Arduino input pin. At rest (tab in slot) the pin reads HIGH; pulling the paddle
 clears the tab and the pin reads LOW — the same falling-edge trigger the firmware already
-expects (see `ArduinoCode/SYSTEM.md`).
+expects (see `Firmware/SYSTEM.md`).
 
 **Verify:** With the Arduino powered and running the firmware, open the Serial Monitor
 (115200 baud). Press the Shift Up paddle — confirm the display shows a gear increment.

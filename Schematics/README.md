@@ -16,7 +16,7 @@ PCB schematics and wiring diagrams for the paddle shifter controller.
 ## Electrical Overview
 
 > Detailed schematics to be added. In the meantime, all pin assignments and wiring
-> rules are documented in [`ArduinoCode/SYSTEM.md`](../ArduinoCode/SYSTEM.md).
+> rules are documented in [`Firmware/SYSTEM.md`](../Firmware/SYSTEM.md).
 
 Key constraints to observe in any schematic:
 

@@ -132,10 +132,10 @@ and what the human operator should retrieve. Do not guess or fill in missing dat
 
 | File or area | Owning role | Rule |
 |---|---|---|
-| `ArduinoCode/*.ino`, `*.h`, `*.cpp` | **Coding** | Only Coding writes firmware |
-| `ArduinoCode/SYSTEM.md` | **Coding** | Coding maintains this as the authoritative firmware spec; Documentation reads it but does not modify it |
+| `Firmware/*.ino`, `*.h`, `*.cpp` | **Coding** | Only Coding writes firmware |
+| `Firmware/SYSTEM.md` | **Coding** | Coding maintains this as the authoritative firmware spec; Documentation reads it but does not modify it |
 | `Schematics/`, `Models/`, `README.md` | **Documentation** | Only Documentation writes builder-facing docs |
-| `ArduinoCode/README.md` | **Documentation** | Build/flash guide — Documentation owns it |
+| `Firmware/README.md` | **Documentation** | Build/flash guide — Documentation owns it |
 | `SOURCES.md` | **Research** | Only Research logs sources here; other roles must not add entries directly |
 | `.agents/knowledge/` | **Subsystem-assigned** | See "Knowledge Base Ownership" below |
 
@@ -152,9 +152,9 @@ drop a HANDOFF to the owning role instead.
 | `.agents/knowledge/jeep-xj/electrical/` | **Research** |
 | `.agents/knowledge/jeep-xj/transfer-case/` | **Research** |
 | `.agents/knowledge/jeep-xj/body-chassis/` | **Documentation** |
-| `.agents/knowledge/arduino/board-comparison.md` | **Coding** |
-| `.agents/knowledge/arduino/pin-reference/` | **Coding** |
-| `.agents/knowledge/arduino/driver-boards/` | **Coding** |
+| `.agents/knowledge/microcontroller/board-comparison.md` | **Coding** |
+| `.agents/knowledge/microcontroller/pin-reference/` | **Coding** |
+| `.agents/knowledge/microcontroller/driver-boards/` | **Coding** |
 | `.agents/knowledge/jeep-xj/overview.md` | **Research** |
 
 **If you discover a new fact in a section you don't own:**

@@ -101,7 +101,7 @@ apply_header_row(ws1, 2, 7,
 
 # Row 3
 apply_header_row(ws1, 3, 7,
-    "Last Verified: 2026-08-17  |  Source: ArduinoCode/SYSTEM.md and .agents/skills/hardware-bom/SKILL.md",
+    "Last Verified: 2026-08-17  |  Source: Firmware/SYSTEM.md and .agents/skills/hardware-bom/SKILL.md",
     make_font(size=9, color=WHITE_TXT),
     DARK_BLUE1)
 
@@ -305,7 +305,7 @@ apply_header_row(ws3, 2, 3,
     DK_PURPLE)
 
 apply_header_row(ws3, 3, 3,
-    "Source: .agents/skills/hardware-bom/SKILL.md, Models/README.md, ArduinoCode/SYSTEM.md — verified 2026-08-17",
+    "Source: .agents/skills/hardware-bom/SKILL.md, Models/README.md, Firmware/SYSTEM.md — verified 2026-08-17",
     make_font(size=9, color=WHITE_TXT),
     DK_PURPLE)
 
@@ -465,7 +465,7 @@ apply_header_row(ws5, 1, 6,
     DK_ORANGE)
 
 apply_header_row(ws5, 2, 6,
-    "Source of truth: ArduinoCode/SYSTEM.md — do not modify this table independently of the firmware spec",
+    "Source of truth: Firmware/SYSTEM.md — do not modify this table independently of the firmware spec",
     make_font(italic=True, color=WHITE_TXT),
     DK_ORANGE)
 

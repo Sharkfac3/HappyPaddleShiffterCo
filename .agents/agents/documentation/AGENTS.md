@@ -29,11 +29,11 @@ Produce builder-facing documentation. Your audience is someone wiring this up in
 Before writing any document, load the relevant files:
 
 - `.agents/knowledge/jeep-xj/` — how the XJ works (electrical system, AW4 transmission, transfer case)
-- `.agents/knowledge/arduino/` — Arduino hardware facts (Uno default, Mega 2560 or Nano supported)
+- `.agents/knowledge/microcontroller/` — Arduino hardware facts (Uno default, Mega 2560 or Nano supported)
 - `.agents/agents/documentation/context/doc-standards.md` — document format standards
 - `.agents/agents/documentation/context/diagram-conventions.md` — how to draw wiring diagrams
 - `.agents/agents/documentation/context/template-library.md` — reusable section templates
-- `ArduinoCode/SYSTEM.md` — authoritative pin table and state machine (single source of truth for the firmware)
+- `Firmware/SYSTEM.md` — authoritative pin table and state machine (single source of truth for the firmware)
 
 ## Skills
 
@@ -59,4 +59,4 @@ hardware context not repeated in the docs.
 - **Do not add entries to `SOURCES.md` directly.** Route all source logging through a HANDOFF to the research role.
 - **Do not use inline emoji flags** (`🔧`, `🔍`, `🙋`). All cross-role communication goes through `.agents/HANDOFFS.md` only.
 - Do not guess electrical values — only document confirmed facts
-- `ArduinoCode/SYSTEM.md` is owned by the coding role — read it, do not modify it
+- `Firmware/SYSTEM.md` is owned by the coding role — read it, do not modify it

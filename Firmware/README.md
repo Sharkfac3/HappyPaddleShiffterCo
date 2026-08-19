@@ -1,4 +1,4 @@
-# ArduinoCode — Build & Flash Guide
+# Firmware — Build & Flash Guide
 
 Firmware for the Jeep XJ AW4 paddle shifter controller.
 For full technical specification (pin assignments, state machine, solenoid mapping)

@@ -4,7 +4,7 @@ Status tracker and specification for every documentation deliverable this role o
 
 ---
 
-## ArduinoCode/README.md
+## Firmware/README.md
 
 **Status:** Complete (initial version)
 **Purpose:** Getting-started guide for builders flashing the firmware.

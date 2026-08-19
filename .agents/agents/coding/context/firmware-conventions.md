@@ -1,6 +1,6 @@
 # Firmware Conventions — HappyPaddleShifterCo
 
-Naming, style, and structural rules for all code in `ArduinoCode/`. New code must follow these conventions so the codebase stays readable and consistent.
+Naming, style, and structural rules for all code in `Firmware/`. New code must follow these conventions so the codebase stays readable and consistent.
 
 ---
 
@@ -8,7 +8,7 @@ Naming, style, and structural rules for all code in `ArduinoCode/`. New code mus
 
 - Each class lives in its own `.h` / `.cpp` pair named after the class: `ClassName.h`, `ClassName.cpp`
 - The main sketch is `ArduinoCode.ino` — do not rename it
-- All files live flat in `ArduinoCode/` — no subdirectories within the sketch folder (Arduino IDE requirement)
+- All files live flat in `Firmware/` — no subdirectories within the sketch folder (Arduino IDE requirement)
 
 ---
 
@@ -110,4 +110,4 @@ Forward declarations go in the `.h`. Implementation goes in the `.cpp`. Do not p
 | Hardware output mapping | Inside the class that owns that output |
 | Class API contracts | `.h` file |
 | Class implementation | `.cpp` file |
-| Architecture and pin table | `ArduinoCode/SYSTEM.md` |
+| Architecture and pin table | `Firmware/SYSTEM.md` |

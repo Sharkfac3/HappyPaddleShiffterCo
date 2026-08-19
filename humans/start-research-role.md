@@ -43,7 +43,7 @@ what is already confirmed so you do not duplicate work:
 - `jeep-xj/transmission/aw4/neutral-safety-switch.md`
 - `jeep-xj/transmission/solenoid-truth-table.md`
 - `jeep-xj/transmission/aw4/solenoids.md` (check `[UNVERIFIED]` items — these are open tasks)
-- `arduino/board-comparison.md`
+- `microcontroller/board-comparison.md`
 
 **6. Load the hardware BOM skill if researching components.**
 `.agents/skills/hardware-bom/SKILL.md` — complete component list with known part numbers.

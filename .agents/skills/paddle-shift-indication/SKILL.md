@@ -1,6 +1,6 @@
 ---
 name: paddle-shift-indication
-description: Modify or debug the PaddleShiftIndication class — the debounced paddle switch reader for the Jeep XJ paddle shifter controller. Use when changing shift input pins, debounce timing, or the one-shot flag behaviour for upshift/downshift requests. Source files are ArduinoCode/PaddleShiftIndication.h and ArduinoCode/PaddleShiftIndication.cpp.
+description: Modify or debug the PaddleShiftIndication class — the debounced paddle switch reader for the Jeep XJ paddle shifter controller. Use when changing shift input pins, debounce timing, or the one-shot flag behaviour for upshift/downshift requests. Source files are Firmware/PaddleShiftIndication.h and Firmware/PaddleShiftIndication.cpp.
 ---
 
 # Skill: paddle-shift-indication
@@ -23,8 +23,8 @@ one-shot request flags to `ArduinoCode.ino`.
 
 ## Source Files
 
-- `ArduinoCode/PaddleShiftIndication.h` — class declaration
-- `ArduinoCode/PaddleShiftIndication.cpp` — debounce logic, flag set/clear
+- `Firmware/PaddleShiftIndication.h` — class declaration
+- `Firmware/PaddleShiftIndication.cpp` — debounce logic, flag set/clear
 
 ## Public Interface
 

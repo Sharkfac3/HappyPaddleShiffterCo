@@ -1,4 +1,4 @@
-# ArduinoCode — System Specification
+# Firmware — System Specification
 ## Jeep XJ Cherokee AW4 Transmission Controller (1987–2001), Arduino Uno (default), Mega 2560, or Nano
 
 This is the authoritative technical reference for the firmware.

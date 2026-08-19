@@ -1,4 +1,4 @@
-# Class Reference — ArduinoCode Firmware
+# Class Reference — Firmware
 
 Quick reference for all classes in the transmission controller firmware. For full implementation details see the corresponding SKILL.md files in `.agents/skills/`.
 
@@ -93,7 +93,7 @@ Key behaviour:
 - Drive is detected by **absence** of any signal — all four pins HIGH
 - UNKNOWN fires when multiple pins are stably LOW simultaneously
 
-**Critical: do NOT reset `currentGear` in the `justEnteredParkNeutral()` handler.** See `ArduinoCode/SYSTEM.md`.
+**Critical: do NOT reset `currentGear` in the `justEnteredParkNeutral()` handler.** See `Firmware/SYSTEM.md`.
 
 ---
 

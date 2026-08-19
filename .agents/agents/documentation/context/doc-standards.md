@@ -77,7 +77,7 @@ Standard BOM table:
 
 | Qty | Description | Specification | Part Number | Notes |
 |---|---|---|---|---|
-| 1 | Arduino Uno | ATmega328P, 5V | — | Original or clone; Mega 2560 or Nano also supported, see `arduino/board-comparison.md` |
+| 1 | Arduino Uno | ATmega328P, 5V | — | Original or clone; Mega 2560 or Nano also supported, see `microcontroller/board-comparison.md` |
 | 3 | Flyback diode | 1N4007, 1A, 1000V | 1N4007 | One per solenoid coil |
 
 Rules:
