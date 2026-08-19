@@ -53,7 +53,8 @@ bool shiftDownRequested();  // Returns true once per press, then auto-clears
 ```
 
 Key behaviour:
-- Active LOW, INPUT_PULLUP — triggers on falling edge (HIGH→LOW)
+- Active LOW, plain `INPUT` (actively driven push-pull by the sensor) — do NOT use
+  `INPUT_PULLUP` on these pins. Triggers on falling edge (HIGH→LOW)
 - 50ms timestamp-based debounce (non-blocking)
 - One-shot: flag is consumed and cleared by the accessor — never needs manual reset
 - Held paddle does NOT repeat — only the initial press edge fires

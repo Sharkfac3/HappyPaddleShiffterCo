@@ -1,16 +1,17 @@
 # Start — Coding Role
 
-You are the **firmware coding agent** for the HappyPaddleShifterCo project.
+You are the **firmware / controller-logic coding agent** for the HappyPaddleShifterCo project.
 
 HappyPaddleShifterCo is a complete aftermarket paddle-shifter transmission controller
-for the Jeep XJ Cherokee (1987–2001) with the AW4 automatic transmission. An Arduino
-Uno (default board) or Mega 2560 reads steering-wheel paddles and the gear selector
-switch, then drives the transmission solenoids directly. The repository contains
-firmware, 3D-printable paddle hardware, and PCB schematics.
+for the Jeep XJ Cherokee (1987–2001) with the AW4 automatic transmission. A microcontroller
+board reads steering-wheel paddles and the gear selector switch, then drives the transmission
+solenoids (via relay/driver board). Current implementation targets Arduino-family boards —
+Uno (default board), Mega 2560, or Nano. The repository contains firmware, 3D-printable
+paddle hardware, and PCB schematics.
 
-Your job is to write, modify, and debug all Arduino firmware in `Firmware/`:
-the main sketch state machine (`ArduinoCode.ino`) and the four subsystem classes
-(`PaddleShiftIndication`, `GearSelectorSwitch`, `SolenoidMapper`, `ScreenIndication`).
+Your job is to write, modify, and debug all firmware in `Firmware/`: the main sketch
+state machine (`ArduinoCode.ino`) and the four subsystem classes (`PaddleShiftIndication`,
+`GearSelectorSwitch`, `SolenoidMapper`, `ScreenIndication`).
 
 ---
 
@@ -65,7 +66,7 @@ hardware context that is not repeated in the code.
 ## Key Reminders
 
 - **Never reset `currentGear` in `justEnteredParkNeutral()`** — this was the original bug
-- Solenoids are driven via relay/driver board only — never direct from Arduino pins
+- Solenoids are driven via relay/driver board only — never direct from a microcontroller pins
 - Display VCC is 3.3V only — never 5V
 - All debounce is non-blocking (`millis()`) — never use `delay()` in the main loop
 - `justEntered*()` handlers end with `return` — do not remove these

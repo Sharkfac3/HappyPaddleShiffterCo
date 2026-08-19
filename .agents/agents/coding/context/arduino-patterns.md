@@ -1,12 +1,15 @@
-# Arduino Patterns — HappyPaddleShifterCo Firmware
+# Firmware Patterns — HappyPaddleShifterCo
 
-The standard patterns used in this codebase. All new code must follow these patterns for consistency and safety.
+The standard patterns used in this codebase, shown in the current implementation language
+(Arduino/AVR C++). All new code must follow these patterns for consistency and safety —
+the underlying principles apply regardless of target board family; only the exact API
+calls (`millis()`, `pinMode()`, `digitalWrite()`, etc.) are board/toolchain-specific.
 
 ---
 
 ## Non-Blocking Debounce (timestamp-based)
 
-**Never use `delay()` for debounce.** The `loop()` must run continuously — any blocking call stalls the entire state machine.
+**Never use a blocking delay for debounce** (Arduino: `delay()`). The `loop()` must run continuously — any blocking call stalls the entire state machine.
 
 The standard debounce pattern used in `PaddleShiftIndication` and `GearSelectorSwitch`:
 
@@ -37,7 +40,9 @@ void update() {
 
 Key points:
 - Timer resets on ANY change — only fires after the pin has been stable for the full window
-- Trigger on **falling edge** (HIGH→LOW) because all inputs are `INPUT_PULLUP`, active LOW
+- Trigger on **falling edge** (HIGH→LOW) — this project's active-LOW convention. Applies to
+  both the pulled-up NSS inputs (`INPUT_PULLUP`) and the push-pull paddle sensor inputs
+  (plain `INPUT`) — the two use different pin modes but the same idle-HIGH/active-LOW polarity
 - The stable-state tracking prevents re-triggering while the pin holds LOW
 
 ---
@@ -66,9 +71,11 @@ This means:
 
 ---
 
-## INPUT_PULLUP + Active LOW
+## Pulled-Up, Active-LOW Digital Inputs
 
-All inputs in this project are wired active LOW: one terminal to an Arduino `INPUT_PULLUP` pin, the other terminal to GND.
+Every digital input needs a defined idle state — no floating pins. The NSS switch inputs in
+this project use the pulled-up, active-LOW convention: one terminal to a pulled-up pin, the
+other to GND (Arduino: `pinMode(pin, INPUT_PULLUP)`).
 
 ```cpp
 // In begin() / setup()
@@ -82,6 +89,10 @@ if (reading == LOW) {
 ```
 
 Do not use external pull-up resistors — the internal pull-ups (any of Uno/Mega/Nano) are sufficient for the signal lengths in this build.
+
+**Exception — paddle trigger sensors:** the paddle inputs are actively driven push-pull by
+the sensor module itself, not switches needing a pull-up. They use plain `INPUT` (no
+`INPUT_PULLUP`) but keep the same active-LOW polarity — see `PaddleShiftIndication`.
 
 ---
 

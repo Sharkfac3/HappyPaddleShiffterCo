@@ -244,3 +244,49 @@ rewording is chunk 03 (coding-role identity) and chunk 04 (root docs), not this 
 up anywhere this sweep missed, it's leftover from before this rename — update it to
 `Firmware/` / `.agents/knowledge/microcontroller/` respectively rather than treating it as
 intentional.
+
+---
+
+## ADR-012: Coding role's identity reframed from Arduino-specific to firmware-general (multi-controller pivot, chunk 03)
+
+**Decision:** `.agents/agents/coding/AGENTS.md`, its `context/` files, and
+`humans/start-coding-role.md` now introduce the role as a firmware / controller-logic role
+for the project, with "currently targets Arduino-family boards (Uno default, Mega 2560 or
+Nano supported)" stated as a fact about the present implementation rather than the role's
+permanent identity.
+
+**Reason:** Same driver as ADR-011 — a future non-Arduino controller board shouldn't require
+rebuilding the agent scaffolding. The role's own self-description (not just folder names) was
+scoped to Arduino before this change.
+
+**Classification principle used:** every Arduino-specific statement in the role's files was
+sorted into one of two buckets:
+- **General firmware principle, currently expressed in Arduino terms** — reworded so the
+  principle is stated board-agnostically, with the Arduino API kept as a parenthetical
+  example, not the rule itself. Example: "No blocking delays — use `millis()`" became "No
+  blocking delays — all timing must be non-blocking, driven off a monotonic clock (Arduino:
+  `millis()`)." Applied to: ADR-004 non-blocking timing, ADR-002's driver-isolation rule
+  (Arduino pin → microcontroller pin), and the pulled-up/active-LOW input convention.
+- **Genuinely Arduino/AVR-specific fact** — left concrete (exact pin numbers, hardware SPI
+  pins per board, `arduino-cli` toolchain detail, `.ino` sketch structure). Not hedged or
+  vaguely generalized, since a builder needs the exact numbers for the board that's actually
+  shipping. Labeled where useful as current-implementation detail rather than deleted.
+
+**Safety-critical rules left unchanged in substance:** the `currentGear`/`justEnteredParkNeutral()`
+rule (ADR-001), the solenoid driver-board requirement (ADR-002, pin terminology generalized
+but the rule itself unchanged), and the display 3.3V warning (ADR-003) were not weakened —
+only vendor-specific wording elsewhere was generalized.
+
+**Also fixed in the same pass (doc-accuracy, not identity-related):** `context/class-reference.md`
+and `context/existing-classes.md` still described paddle trigger sensor inputs as
+`INPUT_PULLUP` — stale since the 2026-08-17 optocoupler-sensor switch to plain `INPUT`
+(see HANDOFFS.md). Corrected to match the actual current firmware. `context/arduino-patterns.md`
+also repeated the same stale "all inputs are INPUT_PULLUP" claim in its debounce pattern notes
+— corrected there too.
+
+**Flagged, not fixed (out of this chunk's scope):** the documentation and research roles'
+`AGENTS.md` files still contain Arduino-specific framing of similar shape. A `[PENDING]`
+HANDOFFS entry was raised rather than editing those roles' files directly.
+
+**Consequence:** Chunk 04 (`humans/multi-controller-pivot/04-generalize-root-project-identity.md`)
+can now start.

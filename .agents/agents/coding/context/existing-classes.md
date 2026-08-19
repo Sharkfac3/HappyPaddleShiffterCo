@@ -19,7 +19,8 @@ bool shiftUpRequested();    // True once per press, then auto-resets
 bool shiftDownRequested();  // True once per press, then auto-resets
 ```
 
-Key: Both pins are INPUT_PULLUP active LOW. Debounce is 50ms timestamp-based.
+Key: Both pins are plain `INPUT` (actively driven push-pull by the sensor), active LOW —
+do NOT use `INPUT_PULLUP` on these pins. Debounce is 50ms timestamp-based.
 Flags are consumed-and-cleared by the accessor — do not reset manually.
 
 ---
@@ -92,8 +93,9 @@ void showLow();         // "L"
 void showBlank();       // Clears screen
 ```
 
-Key: Hardware SPI — DIN→51, CLK→52, fixed on Mega. Display is 3.3V ONLY.
-Has redraw guard: skips SPI write if display content has not changed.
+Key: Hardware SPI, fixed per board and not reassignable — Mega DIN→51/CLK→52,
+Uno/Nano DIN→11/CLK→13. Display is 3.3V ONLY. Has redraw guard: skips SPI write
+if display content has not changed.
 
 Known issue: `showNeutral()` is called for GEAR_SEL_THIRD (displays "N" not "3").
 See `screen-indication` skill for the `showThird()` fix.

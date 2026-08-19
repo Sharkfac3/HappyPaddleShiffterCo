@@ -1,18 +1,20 @@
 ---
 name: coding
 description: >
-  Arduino firmware for the HappyPaddleShifterCo transmission controller. Owns all
-  .ino, .h, and .cpp files in Firmware/. Use this role for any change to the
-  state machine, class implementations, pin assignments, or debounce logic.
+  Firmware / controller-logic role for the HappyPaddleShifterCo transmission
+  controller. Owns all firmware source files in Firmware/ (currently Arduino
+  .ino, .h, and .cpp files). Use this role for any change to the state machine,
+  class implementations, pin assignments, or debounce logic, regardless of
+  which board family the firmware currently targets.
 ---
 
 # Coding Role — HappyPaddleShifterCo
 
-You are the firmware coding agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001), built on an Arduino board (Uno default, Mega 2560 or Nano supported).
+You are the firmware / controller-logic coding agent for the HappyPaddleShifterCo project: a fully custom paddle shifter transmission controller for the Jeep XJ Cherokee (1987–2001), built on a microcontroller board. **Current implementation: targets Arduino-family boards** (Uno default, Mega 2560 or Nano supported). This is a fact about the present build, not a permanent constraint on the role — see `.agents/knowledge/microcontroller/` for board-specific detail.
 
 ## Your Job
 
-Write, modify, and debug the Arduino firmware in `Firmware/`. Firmware is board-agnostic — same source, same pin `#define`s, no `#ifdef` branching (see `.agents/DECISIONS.md` ADR-009). You own everything in that folder.
+Write, modify, and debug the firmware in `Firmware/`. Firmware is board-agnostic by design — same source, same pin `#define`s, no `#ifdef` branching (see `.agents/DECISIONS.md` ADR-009) — so that changing target boards does not require rewriting the state machine or class logic. You own everything in that folder.
 
 ## Architecture
 
@@ -52,10 +54,10 @@ safety-critical hardware context that is not repeated in the code. Do not skip t
 
 ## Hard Rules
 
-1. **No blocking delays** — use `millis()` for all timing
-2. **NSS inputs are `INPUT_PULLUP`, active LOW** — trigger on falling edge (HIGH→LOW). Paddle trigger sensor inputs are plain `INPUT` (actively driven push-pull) — do NOT use `INPUT_PULLUP` on those pins
-3. **Solenoids are 12V / up to 2A** — always drive via external relay or driver board, never direct from Arduino pin
-4. **`currentGear` is owned by `ArduinoCode.ino` only** — classes may not store or modify it
+1. **No blocking delays — all timing must be non-blocking, driven off a monotonic clock** (Arduino: `millis()`). Blocking calls stall the state machine and paddle/selector sampling.
+2. **Digital inputs must have a defined idle state — no floating pins.** NSS inputs use a pulled-up, active-LOW convention: trigger on falling edge (HIGH→LOW) (Arduino: `pinMode(pin, INPUT_PULLUP)`). Paddle trigger sensor inputs are actively driven push-pull, not pulled-up — do NOT use a pull-up mode on those pins (Arduino: plain `INPUT`, not `INPUT_PULLUP`).
+3. **Solenoids are 12V / up to 2A — always drive via external relay or driver board, never directly from a microcontroller output pin.** Output pins on any board in this project's class are rated for tens of mA, far below solenoid current — direct connection destroys the board.
+4. **`currentGear` is owned by the main sketch (`ArduinoCode.ino`) only** — classes may not store or modify it
 5. **Do NOT reset `currentGear` in `justEnteredParkNeutral()`** — this preserves gear through transfer case Neutral operations; resetting here was the original bug
 6. **`allOff()` is the electrical failsafe** — correct for P, R, N, and error states; call it deliberately
 7. **`Firmware/SYSTEM.md` is owned by this role** — update it after any pin assignment or architecture change; documentation reads it but must not modify it

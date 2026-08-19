@@ -19,6 +19,43 @@ Status values:
 
 ## Active Tasks
 
+## [PENDING] — Documentation and research roles' AGENTS.md still frame identity in Arduino-specific terms
+
+**From:** CODING (multi-controller-pivot chunk 03)
+**To:** DOCUMENTATION / RESEARCH
+**Task:** While reframing the coding role's identity from Arduino-specific to firmware-general
+(see `.agents/DECISIONS.md` ADR-012), noticed both `.agents/agents/documentation/AGENTS.md` and
+`.agents/agents/research/AGENTS.md` still contain Arduino-specific framing of similar shape
+(references to "Arduino" in role identity/scope language). Chunk 03's guardrails scoped it to
+the coding role only — out of scope to fix here.
+**Context:** Same underlying driver as the multi-controller-pivot sequence
+(`humans/multi-controller-pivot/`) — a future non-Arduino board shouldn't require rebuilding
+role scaffolding for any role, not just coding. Whether this becomes its own chunk in that
+sequence, or is folded into chunk 04 (root project identity), is a call for the human operator.
+**Output:** Not a fix — this entry exists so the mention doesn't get lost. Route through the
+normal pickup protocol when a role/chunk takes it on.
+
+---
+
+## [DONE] — Multi-controller pivot chunk 03: reframe coding role's identity from Arduino-specific to firmware-general
+
+**From:** Human operator (Sharkfac3), multi-controller-pivot sequence
+**To:** N/A (structural, cross-cutting)
+
+**Resolution (2026-08-19):** `.agents/agents/coding/AGENTS.md` (frontmatter description,
+opening section, and Hard Rules 1–4), `context/arduino-patterns.md` (title, intro, debounce
+and pulled-up-input sections), and `humans/start-coding-role.md` reworked so the role is
+introduced as a firmware/controller-logic role with "currently targets Arduino-family boards
+(Uno default, Mega 2560 or Nano supported)" stated as a present-implementation fact, not
+permanent identity. Genuinely Arduino-specific facts (pin numbers, hardware SPI per board,
+`.ino` structure) left concrete. Safety-critical rules (ADR-001/002/003) not weakened — only
+vendor-specific wording generalized. Also fixed a stale `INPUT_PULLUP` claim for paddle sensor
+inputs in `context/class-reference.md`, `context/existing-classes.md`, and
+`context/arduino-patterns.md` (doc-accuracy fix found during the same pass, unrelated to the
+Arduino/board wire-up itself). Full detail in `.agents/DECISIONS.md` ADR-012.
+
+Chunk 04 (`humans/multi-controller-pivot/04-generalize-root-project-identity.md`) can now start.
+
 ## [DONE] — Multi-controller pivot chunk 02: rename vendor-scoped folders
 
 **From:** Human operator (Sharkfac3), multi-controller-pivot sequence
