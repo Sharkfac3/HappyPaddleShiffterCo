@@ -4,9 +4,10 @@
 
 A complete aftermarket paddle-shifter transmission controller for the Jeep XJ Cherokee (1987–2001)
 with the AW4 automatic transmission (also known as the A340E). Steering-wheel paddles replace the
-factory TCU. The driver controls gear selection directly; an Arduino board (Uno — default —
-Mega 2560, or Nano, all supported) reads the selector position, the paddles, and drives the
-transmission solenoids accordingly.
+factory TCU. The driver controls gear selection directly; a microcontroller board reads the
+selector position, the paddles, and drives the transmission solenoids accordingly. The project
+currently targets Arduino-family boards (Uno default, Mega 2560 or Nano supported) — see
+`.agents/knowledge/microcontroller/` for board specifics.
 
 The repository contains firmware, 3D-printable paddle hardware, and PCB schematics.
 
@@ -20,7 +21,7 @@ and load its `AGENTS.md` before doing any work.
 | Role | AGENTS.md | Responsible for |
 |---|---|---|
 | **Documentation** | `.agents/agents/documentation/AGENTS.md` | Wiring diagrams, pinout tables, install guides, print settings |
-| **Coding** | `.agents/agents/coding/AGENTS.md` | Arduino firmware — `.ino`, `.h`, `.cpp` files |
+| **Coding** | `.agents/agents/coding/AGENTS.md` | Firmware / controller logic — currently Arduino `.ino`, `.h`, `.cpp` files |
 | **Research** | `.agents/agents/research/AGENTS.md` | Part numbers, datasheets, source verification, web research |
 
 A task may need more than one role. Complete the roles sequentially; use `.agents/HANDOFFS.md` to
@@ -84,7 +85,7 @@ Load the relevant skill when working on that subsystem.
 
 1. **Never work on a new branch.** Always commit directly to the currently checked-out branch.
 2. **Never reset `currentGear` in the `justEnteredParkNeutral()` handler.** See `DECISIONS.md`.
-3. **Solenoids are not driven directly from Arduino pins.** Always via relay/driver board.
+3. **Solenoids are not driven directly from microcontroller pins.** Always via relay/driver board.
 4. **Display VCC is 3.3V only.** 5V permanently damages the SSD1351.
 5. **`SOURCES.md` is exclusively owned by the Research role.** Coding and Documentation must not add entries directly — route source logging through a HANDOFF to Research.
 6. **Check `.agents/HANDOFFS.md` before starting any work.** Change any `[PENDING]` task you are picking up to `[IN PROGRESS]` before beginning. Do not duplicate work already in progress.

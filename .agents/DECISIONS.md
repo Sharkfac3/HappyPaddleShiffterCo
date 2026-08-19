@@ -290,3 +290,50 @@ HANDOFFS entry was raised rather than editing those roles' files directly.
 
 **Consequence:** Chunk 04 (`humans/multi-controller-pivot/04-generalize-root-project-identity.md`)
 can now start.
+
+---
+
+## ADR-013: Root `CLAUDE.md`/`AGENTS.md` project identity generalized from Arduino-specific to microcontroller-general (multi-controller pivot, chunk 04 — sequence complete)
+
+**Decision:** Root `CLAUDE.md` and root `AGENTS.md` (still two separate files — chunk 01 kept
+them distinct, synced by content) now describe the project as built on "a microcontroller board"
+with "the project currently targets Arduino-family boards (Uno default, Mega 2560 or Nano
+supported)" stated as a present-implementation fact, not the product's permanent identity. Same
+edit applied to both files. Three spots changed in each: the opening "What This Project Is"
+paragraph, the Agent Roles table's Coding row ("Arduino firmware — `.ino`/`.h`/`.cpp` files" →
+"Firmware / controller logic — currently Arduino `.ino`/`.h`/`.cpp` files", matching ADR-012's
+coding-role phrasing), and Critical Rule 3 ("Solenoids are not driven directly from Arduino
+pins" → "...from microcontroller pins" — the rule is a general driver-isolation principle, not
+Arduino-specific, per ADR-002). The folder-structure diagram already read `microcontroller/`
+(fixed in ADR-011/chunk 02) — no change needed there.
+
+**Reason:** These are the root-level, read-first-by-every-role-and-tool files — the last piece
+of the multi-controller-pivot sequence, previously left untouched twice (see the "Update all
+board docs" `[DONE]` HANDOFFS entry) because neither file sits in any single role's write
+ownership. Wording proposed to the human operator and explicitly approved before committing,
+per the chunk's own guardrail (higher confidence bar than chunks 01–03 since there's no natural
+owner to catch a bad call later).
+
+**README.md checked, not edited:** Root `README.md` (documentation-role-owned) was already
+board-neutral in its own opening identity line ("Steering wheel paddles replace the factory TCU
+— the driver controls gear selection directly via solenoid outputs...") — no "Arduino" in the
+identity paragraph. Its Folders table lists "Arduino Uno (default), Mega 2560, or Nano firmware"
+as a factual description of `Firmware/`'s current contents, consistent with the wording above.
+No inconsistency found; no HANDOFF raised.
+
+**Multi-controller-pivot sequence — complete.** Summary of all four chunks:
+- **Chunk 01** (`humans/multi-controller-pivot/01-resolve-agent-agents-duplication.md`): Merged
+  each role's duplicate `AGENT.md`/`AGENTS.md` into one `AGENTS.md` file, closing the drift-risk
+  escalation structurally.
+- **Chunk 02** (`.../02-*.md`, ADR-011): Renamed `ArduinoCode/` → `Firmware/` and
+  `.agents/knowledge/arduino/` → `.agents/knowledge/microcontroller/`, fixed every live
+  reference repo-wide.
+- **Chunk 03** (`.../03-*.md`, ADR-012): Reframed the coding role's own identity (`AGENTS.md`,
+  `context/`, `humans/start-coding-role.md`) from Arduino-specific to firmware-general.
+- **Chunk 04** (`.../04-*.md`, this entry): Generalized root `CLAUDE.md`/`AGENTS.md` project
+  identity, closing the sequence.
+
+**Consequence:** No further chunks planned in this sequence. The one open cross-cutting item it
+surfaced — documentation/research roles' `AGENTS.md` files still framing identity in
+Arduino-specific terms — remains a separate `[PENDING]` HANDOFFS entry, explicitly not folded
+into this chunk (scope was root docs only); pick up as its own task if/when addressed.

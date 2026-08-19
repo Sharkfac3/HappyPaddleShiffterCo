@@ -19,6 +19,28 @@ Status values:
 
 ## Active Tasks
 
+## [DONE] — Multi-controller pivot chunk 04: generalize root CLAUDE.md/AGENTS.md project identity (sequence complete)
+
+**From:** Human operator (Sharkfac3), multi-controller-pivot sequence
+**To:** N/A (structural, cross-cutting)
+
+**Resolution (2026-08-19):** Root `CLAUDE.md` and root `AGENTS.md` (kept as two separate,
+content-synced files per chunk 01's resolution) reworded in three spots each: the opening
+identity paragraph (microcontroller-general, Arduino-family stated as current target), the
+Agent Roles table's Coding row (matches ADR-012's "Firmware / controller logic" phrasing), and
+Critical Rule 3 (Arduino pins → microcontroller pins, principle unchanged from ADR-002). Wording
+proposed to and explicitly approved by the human operator before committing, per this chunk's
+higher confidence bar. Root `README.md` checked — already board-neutral in its identity line, no
+inconsistency, no HANDOFF needed. Full detail in `.agents/DECISIONS.md` ADR-013, which also
+closes out the full chunk 01–04 sequence with a summary and pointers to all four
+`humans/multi-controller-pivot/` chunk files.
+
+**Multi-controller-pivot sequence is now complete.** The one item it surfaced that's still open —
+documentation/research roles' own `AGENTS.md` identity framing — remains the `[PENDING]` entry
+below, deliberately not folded into this chunk.
+
+---
+
 ## [PENDING] — Documentation and research roles' AGENTS.md still frame identity in Arduino-specific terms
 
 **From:** CODING (multi-controller-pivot chunk 03)
@@ -217,6 +239,11 @@ hardware-SPI pins (MOSI=11, SCK=13). The Mega 2560 remains fully supported.
 Neither file is in the documentation role's ownership table (only `README.md` is). Decide
 whether to generalize this wording and, if so, route it explicitly — `CLAUDE.md` in particular
 sits outside all three agent roles' normal write scope.
+
+**Resolved (2026-08-19):** Closed via multi-controller-pivot chunk 04 — see `.agents/DECISIONS.md`
+ADR-013. Root `CLAUDE.md`/`AGENTS.md` now describe the project as built on "a microcontroller
+board," with Arduino-family boards stated as the current implementation, not the product's
+identity. Wording confirmed with the human operator before committing.
 
 **Not in scope for this handoff (unchanged):** `Schematics/README.md`, `Models/README.md`,
 `scripts/generate_bom.py`, `SOURCES.md` — grep hit these but they weren't checked for
