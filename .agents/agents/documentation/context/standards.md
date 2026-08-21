@@ -44,7 +44,7 @@ where applicable (e.g. "Current (A)", "Voltage (V)").
   > before connecting or disconnecting solenoid wiring.
 
 ### Code References
-- When referencing firmware behaviour, link to or quote from `Firmware/SYSTEM.md`.
+- When referencing firmware behaviour, link to or quote from `Firmware/ArduinoCode/SYSTEM.md`.
 - Do not restate firmware logic in docs — link to the source of truth.
 
 ---

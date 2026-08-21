@@ -96,7 +96,7 @@ Standard wiring:
 | G | 3rd hold (A↔G) | Arduino INPUT_PULLUP pin |
 | H | 1-2 hold (A↔H) | Arduino INPUT_PULLUP pin |
 
-For the specific Arduino pin numbers used in the firmware, see `Firmware/SYSTEM.md`.
+For the specific Arduino pin numbers used in the firmware, see `Firmware/ArduinoCode/SYSTEM.md`.
 
 ---
 

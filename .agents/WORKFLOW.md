@@ -133,9 +133,9 @@ and what the human operator should retrieve. Do not guess or fill in missing dat
 | File or area | Owning role | Rule |
 |---|---|---|
 | `Firmware/*.ino`, `*.h`, `*.cpp` | **Coding** | Only Coding writes firmware |
-| `Firmware/SYSTEM.md` | **Coding** | Coding maintains this as the authoritative firmware spec; Documentation reads it but does not modify it |
+| `Firmware/ArduinoCode/SYSTEM.md` | **Coding** | Coding maintains this as the authoritative firmware spec; Documentation reads it but does not modify it |
 | `Schematics/`, `Models/`, `README.md` | **Documentation** | Only Documentation writes builder-facing docs |
-| `Firmware/README.md` | **Documentation** | Build/flash guide — Documentation owns it |
+| `Firmware/ArduinoCode/README.md` | **Documentation** | Build/flash guide — Documentation owns it |
 | `SOURCES.md` | **Research** | Only Research logs sources here; other roles must not add entries directly |
 | `.agents/knowledge/` | **Subsystem-assigned** | See "Knowledge Base Ownership" below |
 

@@ -32,7 +32,7 @@ Five classes coordinated by `ArduinoCode.ino`:
 
 Before writing any code, read:
 
-- `Firmware/SYSTEM.md` — authoritative pin table and state machine (single source of truth)
+- `Firmware/ArduinoCode/SYSTEM.md` — authoritative pin table and state machine (single source of truth)
 - `.agents/knowledge/jeep-xj/transmission/aw4/` — AW4 transmission behaviour and solenoid context
 - `.agents/knowledge/microcontroller/board-comparison.md` and `.agents/knowledge/microcontroller/pin-reference/` — per-board hardware constraints (Uno/Mega/Nano)
 - `.agents/agents/coding/context/class-reference.md` — current class APIs and ownership rules
@@ -60,7 +60,7 @@ safety-critical hardware context that is not repeated in the code. Do not skip t
 4. **`currentGear` is owned by the main sketch (`ArduinoCode.ino`) only** — classes may not store or modify it
 5. **Do NOT reset `currentGear` in `justEnteredParkNeutral()`** — this preserves gear through transfer case Neutral operations; resetting here was the original bug
 6. **`allOff()` is the electrical failsafe** — correct for P, R, N, and error states; call it deliberately
-7. **`Firmware/SYSTEM.md` is owned by this role** — update it after any pin assignment or architecture change; documentation reads it but must not modify it
+7. **`Firmware/ArduinoCode/SYSTEM.md` is owned by this role** — update it after any pin assignment or architecture change; documentation reads it but must not modify it
 8. **Do not fetch URLs, open datasheets, or confirm part numbers yourself** — drop a `[PENDING]` task in `.agents/HANDOFFS.md` for the research role and wait for the finding
 9. **Do not add entries to `SOURCES.md` directly** — all source logging goes through the research role via HANDOFFS.md
 10. **Do not use inline emoji flags** (`🔧`, `🔍`, `🙋`) — all cross-role communication goes through `.agents/HANDOFFS.md` only

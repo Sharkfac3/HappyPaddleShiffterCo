@@ -6,7 +6,7 @@ description: Return or update the complete hardware bill of materials for the Ha
 # Skill: hardware-bom
 
 Complete hardware BOM for the HappyPaddleShifterCo AW4 paddle shifter controller.
-All data is authoritative — sourced from Firmware/README.md and Firmware/SYSTEM.md.
+All data is authoritative — sourced from Firmware/ArduinoCode/README.md and Firmware/ArduinoCode/SYSTEM.md.
 
 ## Electronics
 
@@ -61,7 +61,7 @@ Omron switches it replaces.
 
 Firmware wired to match: `PaddleShiftIndication.cpp` uses plain `INPUT` (not `INPUT_PULLUP`)
 and triggers on the same HIGH→LOW falling edge the old switch logic already expected — see
-`Firmware/SYSTEM.md` pin table and the `paddle-shift-indication` skill.
+`Firmware/ArduinoCode/SYSTEM.md` pin table and the `paddle-shift-indication` skill.
 
 #### Mounting Note — Mechanical Requirement Differs Fundamentally From the Switch It Replaces
 

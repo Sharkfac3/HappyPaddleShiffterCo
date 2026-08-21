@@ -159,7 +159,7 @@ on the Uno's fixed hardware-SPI pins.
 **Change applied:** `PIN_S1/PIN_S2/PIN_SLU` moved from digital 11/12/13 to A0/A1/A2 in
 `ArduinoCode.ino`. This frees the Uno's hardware SPI (MOSI=11, SCK=13) for the display.
 The Mega's hardware SPI (MOSI=51, SCK=52) was never on 11/12/13, so it is unaffected —
-the same firmware and wiring now work unchanged on both boards. See `Firmware/SYSTEM.md`
+the same firmware and wiring now work unchanged on both boards. See `Firmware/ArduinoCode/SYSTEM.md`
 for the updated pin table.
 
 **Why one firmware image works for both:** The display's DIN/CLK hardware-SPI pins are
@@ -175,7 +175,15 @@ against `arduino:avr:uno` (flash 14070B/43%, SRAM 864B/42%, 2026-08-17), `arduin
 flash is 30720B not 32256B; verified against both the `atmega328` and `atmega328old` bootloader
 options, 2026-08-19) — not yet flashed/tested on physical hardware for any of the three.
 
-**Consequence for documentation:** `Firmware/README.md`, `.agents/knowledge/microcontroller/`,
+**Bench test update (2026-08-20):** First physical bench test run, Uno only (Mega/Nano still
+unflashed). Bench setup only — NOT wired to the Jeep, so NSS/vehicle wiring is unverified.
+Confirmed working: full happy path Park → Drive, up-shift and down-shift through all gears,
+screen output, relay driver actuation on paddle/selector input. Not yet tested: 1-2 hold and
+3rd hold selector positions. This run is also what surfaced the paddle sensor polarity being
+backwards from the 2026-08-17 assumption — see the `[PENDING]` SOURCES.md correction in
+`HANDOFFS.md` and the now-corrected `PaddleShiftIndication.cpp/.h` rising-edge logic.
+
+**Consequence for documentation:** `Firmware/ArduinoCode/README.md`, `.agents/knowledge/microcontroller/`,
 and the `solenoid-mapper`/`screen-indication`/`main-sketch` skills still describe the old
 Mega-only, pins-11/12/13 setup — flagged to the documentation role via `HANDOFFS.md`.
 
@@ -237,7 +245,7 @@ strings changed). Historical/dated entries in `.agents/HANDOFFS.md`, the ADR-008
 and the `humans/multi-controller-pivot/` chunk files themselves were deliberately left
 referencing the old names — they are accurate records of what those names were at the time,
 not live pointers. No prose inside the renamed folders was generalized beyond the folders'
-own title lines (`Firmware/README.md`, `Firmware/SYSTEM.md`) — deeper Arduino-specific
+own title lines (`Firmware/ArduinoCode/README.md`, `Firmware/ArduinoCode/SYSTEM.md`) — deeper Arduino-specific
 rewording is chunk 03 (coding-role identity) and chunk 04 (root docs), not this chunk.
 
 **Consequence:** If a stale reference to `ArduinoCode/` or `.agents/knowledge/arduino/` turns

@@ -42,7 +42,7 @@ Read the sections of `.agents/knowledge/` that apply to your task:
 - `microcontroller/driver-boards/README.md`
 
 **5. Read the firmware spec.**
-`Firmware/SYSTEM.md` is the authoritative source for all pin assignments and state
+`Firmware/ArduinoCode/SYSTEM.md` is the authoritative source for all pin assignments and state
 machine behaviour. Your wiring diagrams and pinout tables must match it exactly.
 This file is owned by the coding role — read it, do not modify it.
 

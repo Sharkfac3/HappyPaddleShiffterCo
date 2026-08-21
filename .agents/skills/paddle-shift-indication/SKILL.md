@@ -1,6 +1,6 @@
 ---
 name: paddle-shift-indication
-description: Modify or debug the PaddleShiftIndication class — the debounced paddle switch reader for the Jeep XJ paddle shifter controller. Use when changing shift input pins, debounce timing, or the one-shot flag behaviour for upshift/downshift requests. Source files are Firmware/PaddleShiftIndication.h and Firmware/PaddleShiftIndication.cpp.
+description: Modify or debug the PaddleShiftIndication class — the debounced paddle switch reader for the Jeep XJ paddle shifter controller. Use when changing shift input pins, debounce timing, or the one-shot flag behaviour for upshift/downshift requests. Source files are Firmware/ArduinoCode/PaddleShiftIndication.h and Firmware/ArduinoCode/PaddleShiftIndication.cpp.
 ---
 
 # Skill: paddle-shift-indication
@@ -23,8 +23,8 @@ one-shot request flags to `ArduinoCode.ino`.
 
 ## Source Files
 
-- `Firmware/PaddleShiftIndication.h` — class declaration
-- `Firmware/PaddleShiftIndication.cpp` — debounce logic, flag set/clear
+- `Firmware/ArduinoCode/PaddleShiftIndication.h` — class declaration
+- `Firmware/ArduinoCode/PaddleShiftIndication.cpp` — debounce logic, flag set/clear
 
 ## Public Interface
 
@@ -40,10 +40,18 @@ bool shiftDownRequested();     // Returns true once per physical press, then aut
 
 ```cpp
 bool _upFlag, _downFlag;
-int _lastUpState, _lastDownState;
+int _lastUpReading, _lastDownReading;        // raw reading, resets the debounce timer on change
+int _confirmedUpState, _confirmedDownState;  // debounce-promoted state, used for edge detection
 unsigned long _lastUpTime, _lastDownTime;
 static const unsigned long DEBOUNCE_MS = 50;
 ```
+
+**Why two state variables per pin, not one:** comparing the edge against the raw reading (as
+this class did until 2026-08-20) is a latent bug — `loop()` runs far faster than `DEBOUNCE_MS`,
+so the raw reading catches up to the new level long before the timer elapses, and the promoted
+edge is never seen. `_confirmedUpState`/`_confirmedDownState` only change when the debounce
+window actually closes, so the edge check compares against the truly-last-stable value, not
+last loop iteration's value.
 
 ## Behaviour Notes
 

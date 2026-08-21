@@ -33,7 +33,7 @@ Before writing any document, load the relevant files:
 - `.agents/agents/documentation/context/doc-standards.md` — document format standards
 - `.agents/agents/documentation/context/diagram-conventions.md` — how to draw wiring diagrams
 - `.agents/agents/documentation/context/template-library.md` — reusable section templates
-- `Firmware/SYSTEM.md` — authoritative pin table and state machine (single source of truth for the firmware)
+- `Firmware/ArduinoCode/SYSTEM.md` — authoritative pin table and state machine (single source of truth for the firmware)
 
 ## Skills
 
@@ -59,4 +59,4 @@ hardware context not repeated in the docs.
 - **Do not add entries to `SOURCES.md` directly.** Route all source logging through a HANDOFF to the research role.
 - **Do not use inline emoji flags** (`🔧`, `🔍`, `🙋`). All cross-role communication goes through `.agents/HANDOFFS.md` only.
 - Do not guess electrical values — only document confirmed facts
-- `Firmware/SYSTEM.md` is owned by the coding role — read it, do not modify it
+- `Firmware/ArduinoCode/SYSTEM.md` is owned by the coding role — read it, do not modify it

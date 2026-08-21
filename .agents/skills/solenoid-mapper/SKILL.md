@@ -1,6 +1,6 @@
 ---
 name: solenoid-mapper
-description: Modify or debug the SolenoidMapper class — the AW4 solenoid output driver for the Jeep XJ paddle shifter controller. Use when changing the gear-to-solenoid truth table, adding gear states, or modifying solenoid output pin assignments. Source files are Firmware/SolenoidMapper.h and Firmware/SolenoidMapper.cpp.
+description: Modify or debug the SolenoidMapper class — the AW4 solenoid output driver for the Jeep XJ paddle shifter controller. Use when changing the gear-to-solenoid truth table, adding gear states, or modifying solenoid output pin assignments. Source files are Firmware/ArduinoCode/SolenoidMapper.h and Firmware/ArduinoCode/SolenoidMapper.cpp.
 ---
 
 # Skill: solenoid-mapper
@@ -19,8 +19,8 @@ output states for the AW4 / A340E automatic transmission.
 
 ## Source Files
 
-- `Firmware/SolenoidMapper.h` — class declaration
-- `Firmware/SolenoidMapper.cpp` — `applyGear()` truth table, `write()` helper, `allOff()`
+- `Firmware/ArduinoCode/SolenoidMapper.h` — class declaration
+- `Firmware/ArduinoCode/SolenoidMapper.cpp` — `applyGear()` truth table, `write()` helper, `allOff()`
 
 ## Pin Assignments
 

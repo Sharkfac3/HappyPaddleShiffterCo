@@ -111,7 +111,7 @@ int currentGear = 1;
 // =============================================================================
 void setup() {
     Serial.begin(9600);
-    Serial.println("AW4 Controller — Starting up - flashed");
+    Serial.println("AW4 Controller — Starting up");
 
     paddle.begin();
     selector.begin();

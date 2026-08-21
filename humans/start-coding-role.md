@@ -56,7 +56,7 @@ hardware context that is not repeated in the code.
 | `SolenoidMapper.h/.cpp` | `.agents/skills/solenoid-mapper/SKILL.md` |
 
 **6. Read the firmware spec and decisions.**
-- `Firmware/SYSTEM.md` — authoritative pin assignments and state machine. You own
+- `Firmware/ArduinoCode/SYSTEM.md` — authoritative pin assignments and state machine. You own
   this file; update it after any pin or architecture change.
 - `.agents/DECISIONS.md` — read before any significant change. Many constraints exist
   because violating them reintroduced real bugs.

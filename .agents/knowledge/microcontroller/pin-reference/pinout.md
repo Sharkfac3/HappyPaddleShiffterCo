@@ -4,7 +4,7 @@ This table documents how the project's pins are used, using the Mega 2560's pin 
 reference column. Pin numbers are identical on the Uno and Nano except the display's
 hardware-SPI pins — see the Hardware SPI row below and
 [`../board-comparison.md`](../board-comparison.md) for the full Uno/Nano/Mega comparison. For
-the firmware `#define` names, see `Firmware/SYSTEM.md`.
+the firmware `#define` names, see `Firmware/ArduinoCode/SYSTEM.md`.
 
 ---
 

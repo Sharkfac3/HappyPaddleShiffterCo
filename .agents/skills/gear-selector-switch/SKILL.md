@@ -1,6 +1,6 @@
 ---
 name: gear-selector-switch
-description: Modify or debug the GearSelectorSwitch class — the AW4 neutral safety switch (NSS) reader for the Jeep XJ paddle shifter controller. Use when changing selector position detection, debounce logic, state enum values, or one-shot entry flag behaviour. Source files are Firmware/GearSelectorSwitch.h and Firmware/GearSelectorSwitch.cpp.
+description: Modify or debug the GearSelectorSwitch class — the AW4 neutral safety switch (NSS) reader for the Jeep XJ paddle shifter controller. Use when changing selector position detection, debounce logic, state enum values, or one-shot entry flag behaviour. Source files are Firmware/ArduinoCode/GearSelectorSwitch.h and Firmware/ArduinoCode/GearSelectorSwitch.cpp.
 ---
 
 # Skill: gear-selector-switch
@@ -28,8 +28,8 @@ by the switch alone. Both are reported as `GEAR_SEL_PARK_NEUTRAL`.
 
 ## Source Files
 
-- `Firmware/GearSelectorSwitch.h` — enum definition, class declaration, `IDX_*` constants
-- `Firmware/GearSelectorSwitch.cpp` — debounce logic, state resolution, one-shot flags
+- `Firmware/ArduinoCode/GearSelectorSwitch.h` — enum definition, class declaration, `IDX_*` constants
+- `Firmware/ArduinoCode/GearSelectorSwitch.cpp` — debounce logic, state resolution, one-shot flags
 
 ## State Enum
 

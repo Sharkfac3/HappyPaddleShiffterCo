@@ -55,7 +55,7 @@ This creates a critical interaction with the controller:
 
 This is distinct from Reverse: when returning from Reverse to Drive, resetting to 1st gear is correct because Reverse always requires a full stop.
 
-See `Firmware/SYSTEM.md` — "Transfer Case Operation" section — for the firmware implementation detail.
+See `Firmware/ArduinoCode/SYSTEM.md` — "Transfer Case Operation" section — for the firmware implementation detail.
 
 ---
 

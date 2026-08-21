@@ -36,8 +36,13 @@ private:
     bool _upFlag;
     bool _downFlag;
 
-    int _lastUpState;
-    int _lastDownState;
+    // Raw last reading (for detecting a change, to reset the debounce timer)
+    int _lastUpReading;
+    int _lastDownReading;
+
+    // Last reading actually promoted by the debounce window (used for edge detection)
+    int _confirmedUpState;
+    int _confirmedDownState;
 
     unsigned long _lastUpTime;
     unsigned long _lastDownTime;

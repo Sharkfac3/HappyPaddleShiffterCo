@@ -101,7 +101,7 @@ apply_header_row(ws1, 2, 7,
 
 # Row 3
 apply_header_row(ws1, 3, 7,
-    "Last Verified: 2026-08-17  |  Source: Firmware/SYSTEM.md and .agents/skills/hardware-bom/SKILL.md",
+    "Last Verified: 2026-08-17  |  Source: Firmware/ArduinoCode/SYSTEM.md and .agents/skills/hardware-bom/SKILL.md",
     make_font(size=9, color=WHITE_TXT),
     DARK_BLUE1)
 
@@ -305,7 +305,7 @@ apply_header_row(ws3, 2, 3,
     DK_PURPLE)
 
 apply_header_row(ws3, 3, 3,
-    "Source: .agents/skills/hardware-bom/SKILL.md, Models/README.md, Firmware/SYSTEM.md — verified 2026-08-17",
+    "Source: .agents/skills/hardware-bom/SKILL.md, Models/README.md, Firmware/ArduinoCode/SYSTEM.md — verified 2026-08-17",
     make_font(size=9, color=WHITE_TXT),
     DK_PURPLE)
 
@@ -334,8 +334,8 @@ elec_rows = [
     (9,  ["Electrical", "Pins", "Confirmed — VCC, GND, DO (digital output only)"]),
     (10, ["Electrical", "Output type", "Confirmed — actively driven push-pull; Arduino input must be plain INPUT, not INPUT_PULLUP"]),
     (11, ["Electrical", "Output polarity", "Confirmed — slot unobstructed = DO LOW; slot obstructed = DO HIGH"]),
-    (12, ["Electrical", "At-rest orientation", "Confirmed — tab sits in the slot at rest, so DO is HIGH at rest; paddle pull clears the slot and drives DO LOW"]),
-    (13, ["Electrical", "Trigger edge used by firmware", "Confirmed — same HIGH→LOW falling edge as the previous logic expected"]),
+    (12, ["Electrical", "At-rest orientation", "Confirmed by multimeter on bench hardware 2026-08-20 — tab sits in the slot at rest, so DO is LOW at rest (0V); paddle pull clears the slot and drives DO HIGH (4.3V). Opposite of the original 2026-08-17 assumption."]),
+    (13, ["Electrical", "Trigger edge used by firmware", "Confirmed — LOW→HIGH rising edge"]),
     (14, ["Electrical", "IP / environmental rating", "Confirmed limitation — none stated; module ships as a bare PCB"]),
 ]
 for row_num, vals in elec_rows:
@@ -465,7 +465,7 @@ apply_header_row(ws5, 1, 6,
     DK_ORANGE)
 
 apply_header_row(ws5, 2, 6,
-    "Source of truth: Firmware/SYSTEM.md — do not modify this table independently of the firmware spec",
+    "Source of truth: Firmware/ArduinoCode/SYSTEM.md — do not modify this table independently of the firmware spec",
     make_font(italic=True, color=WHITE_TXT),
     DK_ORANGE)
 
@@ -488,8 +488,8 @@ for col, h in enumerate(hdr5, 1):
 ws5.row_dimensions[4].height = 18
 
 pin_rows = [
-    (5,  ["2",  "INPUT",  "INPUT", "Shift Up paddle sensor DO",           "Paddle Input",    "Sensor drives the line. Tab sits in slot at rest = HIGH; pull clears slot = LOW. Falling-edge trigger, 50ms debounce."]),
-    (6,  ["3",  "INPUT",  "INPUT", "Shift Down paddle sensor DO",         "Paddle Input",    "Sensor drives the line. Tab sits in slot at rest = HIGH; pull clears slot = LOW. Falling-edge trigger, 50ms debounce."]),
+    (5,  ["2",  "INPUT",  "INPUT", "Shift Up paddle sensor DO",           "Paddle Input",    "Sensor drives the line. Tab sits in slot at rest = LOW; pull clears slot = HIGH. Rising-edge trigger, 50ms debounce."]),
+    (6,  ["3",  "INPUT",  "INPUT", "Shift Down paddle sensor DO",         "Paddle Input",    "Sensor drives the line. Tab sits in slot at rest = LOW; pull clears slot = HIGH. Rising-edge trigger, 50ms debounce."]),
     (7,  ["4",  "INPUT",  "INPUT_PULLUP", "NSS Pin B (Park/Neutral) → GND",  "NSS Input",       "Active LOW. Park and Neutral are electrically indistinguishable."]),
     (8,  ["5",  "INPUT",  "INPUT_PULLUP", "NSS Pin E (Reverse) → GND",       "NSS Input",       "Active LOW. Pin A is common — wire NSS Pin A to GND."]),
     (9,  ["6",  "INPUT",  "INPUT_PULLUP", "NSS Pin G (3rd hold) → GND",      "NSS Input",       "Active LOW. Pin A is common — wire NSS Pin A to GND."]),

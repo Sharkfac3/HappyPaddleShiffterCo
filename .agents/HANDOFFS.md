@@ -19,6 +19,31 @@ Status values:
 
 ## Active Tasks
 
+## [PENDING] — Fix stale paddle sensor polarity/edge wording in doc-owned files (rest = LOW, not HIGH)
+
+**From:** CODING
+**To:** DOCUMENTATION
+**Task:** Same root cause as the SOURCES.md correction below (bench-confirmed 2026-08-20: tab
+in slot at rest = DO LOW, paddle pull = DO HIGH, rising edge — opposite of the 2026-08-17
+assumption). Coding-owned files (`Firmware/ArduinoCode/*.ino/.cpp/.h/SYSTEM.md`, the
+`paddle-shift-indication` skill, `scripts/generate_bom.py`) are already corrected. The
+following documentation-owned files still say the old (wrong) polarity/edge and need the same
+fix:
+- `Firmware/ArduinoCode/README.md` — "Quick Sanity Check" step 2 says "confirm active LOW
+  (pressed = GND)" for the paddle test; should describe active-HIGH-on-pull instead.
+- `Models/README.md` — wiring table (rows "Shift Up"/"Shift Down") says "Tab-in-slot-at-rest =
+  HIGH"; prose below it says "At rest (tab in slot) the pin reads HIGH; pulling the paddle
+  clears the tab and the pin reads LOW — the same falling-edge trigger." Both need flipping to
+  LOW-at-rest / HIGH-on-pull / rising-edge.
+- `.agents/skills/hardware-bom/SKILL.md` — "Paddle Trigger Sensor Detail" table's "Confirmed
+  mechanical orientation" row and the "Firmware wired to match" line below it both still say
+  HIGH-at-rest / falling-edge.
+
+**Output:** Update the three files above to match the bench-confirmed polarity already reflected
+in the firmware and `SYSTEM.md`.
+
+---
+
 ## [PENDING] — Correct paddle sensor DO polarity in SOURCES.md (rest = LOW, not HIGH)
 
 **From:** CODING
@@ -35,7 +60,7 @@ pull = HIGH, rising edge), and correct/annotate the earlier 2026-08-17 falling-e
 superseded by direct multimeter measurement rather than deleting the history.
 
 **Resolution already applied on the CODING side (informational, not blocking this task):**
-`Firmware/PaddleShiftIndication.cpp/.h`, `Firmware/ArduinoCode.ino`, `Firmware/SYSTEM.md`, and
+`Firmware/ArduinoCode/PaddleShiftIndication.cpp/.h`, `Firmware/ArduinoCode/ArduinoCode.ino`, `Firmware/ArduinoCode/SYSTEM.md`, and
 the `paddle-shift-indication` skill have all been updated to trigger on LOW→HIGH rising edge
 instead of HIGH→LOW falling edge, and recompiled clean against `arduino:avr:uno` (14066B/43%
 flash, 864B/42% SRAM). Not yet re-verified on the bench with the corrected firmware — that's

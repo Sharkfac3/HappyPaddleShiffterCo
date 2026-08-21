@@ -33,8 +33,10 @@ PaddleShiftIndication::PaddleShiftIndication(int pinUp, int pinDown)
       _pinDown(pinDown),
       _upFlag(false),
       _downFlag(false),
-      _lastUpState(LOW),     // Unpressed at construction time (tab in slot = LOW)
-      _lastDownState(LOW),
+      _lastUpReading(LOW),      // Unpressed at construction time (tab in slot = LOW)
+      _lastDownReading(LOW),
+      _confirmedUpState(LOW),
+      _confirmedDownState(LOW),
       _lastUpTime(0),
       _lastDownTime(0)
 {}
@@ -55,42 +57,51 @@ void PaddleShiftIndication::begin() {
 //
 // Reads both paddle pins, applies 50ms debounce, and sets the corresponding
 // flag on a confirmed rising edge (LOW → HIGH = physical press).
+//
+// Raw reading vs. confirmed state are tracked separately on purpose:
+// _lastUpReading/_lastDownReading only exist to detect when the pin has
+// changed (so the debounce timer can be reset). _confirmedUpState/
+// _confirmedDownState hold the last value the debounce window actually
+// promoted, and only THAT is compared for the edge — comparing against the
+// raw reading instead (as this class originally did) means loop() runs many
+// times faster than DEBOUNCE_MS, so the raw reading has already caught up
+// to the new level long before the timer elapses, and the edge is never seen.
 // -----------------------------------------------------------------------------
 void PaddleShiftIndication::update() {
     unsigned long now = millis();
 
     // --- Shift Up ---
-    int upState = digitalRead(_pinUp);
+    int upReading = digitalRead(_pinUp);
 
-    // Reset the debounce timer any time the reading changes
-    if (upState != _lastUpState) {
-        _lastUpTime = now;
+    // Reset the debounce timer any time the raw reading changes
+    if (upReading != _lastUpReading) {
+        _lastUpTime    = now;
+        _lastUpReading = upReading;
     }
 
-    // Only act once the reading has been stable for DEBOUNCE_MS
-    if ((now - _lastUpTime) >= DEBOUNCE_MS) {
+    // Only promote once the reading has been stable for DEBOUNCE_MS
+    if ((now - _lastUpTime) >= DEBOUNCE_MS && upReading != _confirmedUpState) {
         // Rising edge: was LOW (unpressed), now HIGH (pressed) — trigger shift
-        if (upState == HIGH && _lastUpState == LOW) {
+        if (upReading == HIGH && _confirmedUpState == LOW) {
             _upFlag = true;
         }
+        _confirmedUpState = upReading;
     }
-
-    _lastUpState = upState;  // Track for next cycle's edge detection
 
     // --- Shift Down (identical logic) ---
-    int downState = digitalRead(_pinDown);
+    int downReading = digitalRead(_pinDown);
 
-    if (downState != _lastDownState) {
-        _lastDownTime = now;
+    if (downReading != _lastDownReading) {
+        _lastDownTime    = now;
+        _lastDownReading = downReading;
     }
 
-    if ((now - _lastDownTime) >= DEBOUNCE_MS) {
-        if (downState == HIGH && _lastDownState == LOW) {
+    if ((now - _lastDownTime) >= DEBOUNCE_MS && downReading != _confirmedDownState) {
+        if (downReading == HIGH && _confirmedDownState == LOW) {
             _downFlag = true;
         }
+        _confirmedDownState = downReading;
     }
-
-    _lastDownState = downState;
 }
 
 // -----------------------------------------------------------------------------

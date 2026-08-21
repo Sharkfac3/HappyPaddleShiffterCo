@@ -94,7 +94,7 @@ Key behaviour:
 - Drive is detected by **absence** of any signal — all four pins HIGH
 - UNKNOWN fires when multiple pins are stably LOW simultaneously
 
-**Critical: do NOT reset `currentGear` in the `justEnteredParkNeutral()` handler.** See `Firmware/SYSTEM.md`.
+**Critical: do NOT reset `currentGear` in the `justEnteredParkNeutral()` handler.** See `Firmware/ArduinoCode/SYSTEM.md`.
 
 ---
 

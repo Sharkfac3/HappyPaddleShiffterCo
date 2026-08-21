@@ -1,6 +1,6 @@
 ---
 name: screen-indication
-description: Modify or debug the ScreenIndication class — the SSD1351 OLED display wrapper for the Jeep XJ paddle shifter controller. Use when changing what is displayed for each gear or selector state, adding new display modes, or fixing display rendering issues. Source files are Firmware/ScreenIndication.h and Firmware/ScreenIndication.cpp.
+description: Modify or debug the ScreenIndication class — the SSD1351 OLED display wrapper for the Jeep XJ paddle shifter controller. Use when changing what is displayed for each gear or selector state, adding new display modes, or fixing display rendering issues. Source files are Firmware/ArduinoCode/ScreenIndication.h and Firmware/ArduinoCode/ScreenIndication.cpp.
 ---
 
 # Skill: screen-indication
@@ -34,8 +34,8 @@ character or short string.
 
 ## Source Files
 
-- `Firmware/ScreenIndication.h` — class declaration, `SCREEN_WIDTH`/`SCREEN_HEIGHT` constants
-- `Firmware/ScreenIndication.cpp` — `renderText()` core renderer, all `show*()` methods
+- `Firmware/ArduinoCode/ScreenIndication.h` — class declaration, `SCREEN_WIDTH`/`SCREEN_HEIGHT` constants
+- `Firmware/ArduinoCode/ScreenIndication.cpp` — `renderText()` core renderer, all `show*()` methods
 
 ## Public Interface
 

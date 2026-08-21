@@ -110,4 +110,4 @@ Forward declarations go in the `.h`. Implementation goes in the `.cpp`. Do not p
 | Hardware output mapping | Inside the class that owns that output |
 | Class API contracts | `.h` file |
 | Class implementation | `.cpp` file |
-| Architecture and pin table | `Firmware/SYSTEM.md` |
+| Architecture and pin table | `Firmware/ArduinoCode/SYSTEM.md` |

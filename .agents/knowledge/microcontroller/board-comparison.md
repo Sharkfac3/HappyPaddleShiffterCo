@@ -65,7 +65,7 @@ both processor/bootloader options — `cpu=atmega328` (default, new bootloader) 
 `cpu=atmega328old` (old bootloader) — with identical results on both: program size is byte-for-
 byte the same as the Uno build, but this arduino-cli board definition reports the Nano's usable
 flash as 30720 B rather than the Uno's 32256 B (the bootloader reserves more space), so the same
-14070 B occupies a larger percentage (45% vs 43%). See `Firmware/README.md` for which
+14070 B occupies a larger percentage (45% vs 43%). See `Firmware/ArduinoCode/README.md` for which
 processor option to pick when flashing a physical Nano — picking the wrong one uploads
 successfully but the board won't run. None of the three boards has been bench-tested on
 physical hardware yet.
