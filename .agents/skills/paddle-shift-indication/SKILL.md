@@ -12,14 +12,14 @@ one-shot request flags to `ArduinoCode.ino`.
 ## Key Electrical Facts
 
 - Sensor DO output is **actively driven (push-pull)** — pins are plain `INPUT`, NOT `INPUT_PULLUP`. Enabling the internal pull-up would fight the sensor's own driver.
-- Metal tab sits **IN the slot at rest** → DO reads HIGH. Paddle pull clears the tab from the slot → DO reads LOW. Same HIGH→LOW falling edge the debounce/edge-detection logic already expects.
+- Metal tab sits **IN the slot at rest** → DO reads LOW. Paddle pull clears the tab from the slot → DO reads HIGH. LOW→HIGH rising edge triggers the debounce/edge-detection logic. **Confirmed by multimeter on bench hardware 2026-08-20** (0V rest / 4.3V pulled) — opposite of the original 2026-08-17 assumption this class shipped with; that assumption is now known wrong for this hardware.
 - Debounce is timestamp-based (non-blocking) — 50ms settle window
-- Source: `SOURCES.md` → "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393), User-Owned Part"
+- Source: `SOURCES.md` → "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393), User-Owned Part" (flagged for a Research-role correction — see HANDOFFS.md)
 
 | Function | Arduino Pin | Mode |
 |---|---|---|
-| Shift Up | 2 | plain INPUT — sensor-driven, rest = HIGH |
-| Shift Down | 3 | plain INPUT — sensor-driven, rest = HIGH |
+| Shift Up | 2 | plain INPUT — sensor-driven, rest = LOW |
+| Shift Down | 3 | plain INPUT — sensor-driven, rest = LOW |
 
 ## Source Files
 
@@ -48,7 +48,7 @@ static const unsigned long DEBOUNCE_MS = 50;
 ## Behaviour Notes
 
 - `update()` must be called every `loop()` — debounce is timestamp-based, not blocking
-- Trigger on **falling edge** (HIGH→LOW = physical press)
+- Trigger on **rising edge** (LOW→HIGH = physical press)
 - Each flag is consumed-and-cleared by its accessor — `ArduinoCode.ino` never needs to reset flags manually
 - A held paddle does NOT produce repeated shift events — only the initial press edge triggers the flag
 

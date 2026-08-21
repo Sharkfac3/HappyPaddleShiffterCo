@@ -11,10 +11,10 @@
 // The sensor's DO pin is an ACTIVELY DRIVEN push-pull output — do NOT enable
 // INPUT_PULLUP on these pins, the sensor drives the line itself.
 //
-// Tab in slot (rest) = DO HIGH. Paddle pull clears the tab from the slot =
-// DO LOW. This is a HIGH->LOW falling edge on pull, same polarity the
-// debounce/edge-detection logic below already expects from the switches
-// this sensor replaces — no logic change needed, only the pin mode.
+// Tab in slot (rest) = DO LOW. Paddle pull clears the tab from the slot =
+// DO HIGH. This is a LOW->HIGH rising edge on pull.
+// Confirmed by multimeter on bench hardware 2026-08-20 (0V rest / 4.3V pulled) —
+// opposite of the 2026-08-17 assumption this class originally shipped with.
 // Source: SOURCES.md "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393)".
 //
 // Debounce strategy: timestamp-based (not blocking).
@@ -33,8 +33,8 @@ PaddleShiftIndication::PaddleShiftIndication(int pinUp, int pinDown)
       _pinDown(pinDown),
       _upFlag(false),
       _downFlag(false),
-      _lastUpState(HIGH),     // Unpressed at construction time
-      _lastDownState(HIGH),
+      _lastUpState(LOW),     // Unpressed at construction time (tab in slot = LOW)
+      _lastDownState(LOW),
       _lastUpTime(0),
       _lastDownTime(0)
 {}
@@ -54,7 +54,7 @@ void PaddleShiftIndication::begin() {
 // update() — must be called every loop() iteration.
 //
 // Reads both paddle pins, applies 50ms debounce, and sets the corresponding
-// flag on a confirmed falling edge (HIGH → LOW = physical press).
+// flag on a confirmed rising edge (LOW → HIGH = physical press).
 // -----------------------------------------------------------------------------
 void PaddleShiftIndication::update() {
     unsigned long now = millis();
@@ -69,8 +69,8 @@ void PaddleShiftIndication::update() {
 
     // Only act once the reading has been stable for DEBOUNCE_MS
     if ((now - _lastUpTime) >= DEBOUNCE_MS) {
-        // Falling edge: was HIGH (unpressed), now LOW (pressed) — trigger shift
-        if (upState == LOW && _lastUpState == HIGH) {
+        // Rising edge: was LOW (unpressed), now HIGH (pressed) — trigger shift
+        if (upState == HIGH && _lastUpState == LOW) {
             _upFlag = true;
         }
     }
@@ -85,7 +85,7 @@ void PaddleShiftIndication::update() {
     }
 
     if ((now - _lastDownTime) >= DEBOUNCE_MS) {
-        if (downState == LOW && _lastDownState == HIGH) {
+        if (downState == HIGH && _lastDownState == LOW) {
             _downFlag = true;
         }
     }

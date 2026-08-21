@@ -25,7 +25,7 @@ the firmware `#define` names, see `Firmware/SYSTEM.md`.
 | A2 | SLU solenoid output | OUTPUT | — | Driver board channel 3 → SLU solenoid | 5V logic to driver board |
 | 51 (Mega) / 11 (Uno, Nano) | Display DIN (MOSI) | OUTPUT | Hardware SPI | SSD1351 display DIN | **Fixed hardware SPI pin — cannot be changed; auto-selected by SPI library per board** |
 | 52 (Mega) / 13 (Uno, Nano) | Display CLK (SCK) | OUTPUT | Hardware SPI | SSD1351 display CLK | **Fixed hardware SPI pin — cannot be changed; auto-selected by SPI library per board** |
-| A3 | Display RST | OUTPUT | Digital | SSD1351 display RES | Used as digital output via `analogPinToDigitalPin()` |
+| A3 | Display RST | OUTPUT | Digital | SSD1351 display RES | Used as digital output via `analogPinToDigitalPin()`. Board silkscreen may say "RST" instead of "RES" — same pin, not a different display variant. |
 | A4 | Display DC | OUTPUT | Digital | SSD1351 display DC | — |
 | A5 | Display CS | OUTPUT | Digital | SSD1351 display CS | — |
 

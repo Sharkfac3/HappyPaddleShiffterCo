@@ -7,6 +7,8 @@
 // Monitors shift up and shift down paddle IR slot optocoupler sensors
 // (LM393-based, tab-in-slot-at-rest) wired to the Arduino as plain INPUT
 // (sensor output is actively driven, not open-drain).
+// Rest (tab in slot) = LOW. Paddle pull = HIGH. Triggers on LOW->HIGH rising
+// edge. Confirmed by multimeter on bench hardware 2026-08-20.
 // Applies 50ms software debounce as a safety margin against edge noise.
 //
 // Call update() every loop. Read shiftUpRequested() / shiftDownRequested()

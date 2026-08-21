@@ -19,6 +19,82 @@ Status values:
 
 ## Active Tasks
 
+## [PENDING] — Correct paddle sensor DO polarity in SOURCES.md (rest = LOW, not HIGH)
+
+**From:** CODING
+**To:** RESEARCH
+**Task:** `SOURCES.md` → "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393), User-Owned
+Part" currently states tab-in-slot-at-rest = DO HIGH, paddle pull = DO LOW (falling edge). This
+was a 2026-08-17 assumption, never independently measured at the time. Bench-tested with a
+multimeter today (2026-08-20) on the actual shift-up sensor: **rest = 0V (LOW), tab pulled =
+4.3V (HIGH)** — the opposite polarity. This was the root cause of paddle shifts not registering
+during bench testing (Arduino was waiting for a falling edge that never happened).
+
+**What is needed:** Update the SOURCES.md entry to reflect the measured polarity (rest = LOW,
+pull = HIGH, rising edge), and correct/annotate the earlier 2026-08-17 falling-edge claim as
+superseded by direct multimeter measurement rather than deleting the history.
+
+**Resolution already applied on the CODING side (informational, not blocking this task):**
+`Firmware/PaddleShiftIndication.cpp/.h`, `Firmware/ArduinoCode.ino`, `Firmware/SYSTEM.md`, and
+the `paddle-shift-indication` skill have all been updated to trigger on LOW→HIGH rising edge
+instead of HIGH→LOW falling edge, and recompiled clean against `arduino:avr:uno` (14066B/43%
+flash, 864B/42% SRAM). Not yet re-verified on the bench with the corrected firmware — that's
+the next step for the human operator, independent of this SOURCES.md correction.
+
+**Output:** Updated SOURCES.md section, so future reads of that file reflect measured hardware
+truth instead of an unverified assumption.
+
+---
+
+## [PENDING] — Add confirmed solenoid switching polarity to knowledge base (Jeep AW4: all high-side, common ground)
+
+**From:** RESEARCH
+**To:** DOCUMENTATION
+**Task:** Solenoid switching polarity for the Jeep AW4 is now confirmed from a **primary
+source** (the actual 1993 Jeep XJ FSM, not a forum). Add this to the knowledge base. This
+supersedes an earlier draft of this same handoff that warned of a possible SLU polarity
+mismatch — that warning was based on Toyota A340E documentation and does not apply to the Jeep
+AW4; see the correction in `SOURCES.md` before writing the knowledge-base entry so the Toyota
+vs. Jeep distinction is captured accurately, not just the bottom-line answer.
+
+**Confirmed finding (primary source, ~90%+ confidence — full detail + quotes in `SOURCES.md`
+→ "Stock TCU Solenoid Switching Polarity" → "Correction (2026-08-20) — Jeep AW4 FSM..."):**
+- **Jeep AW4 TCM drives S1, S2, AND the lock-up solenoid (SLU) all the same way: high-side.**
+  All three solenoids share one common ground wire (per the FSM's own fault-isolation logic —
+  a single black-wire ground fault takes out all three at once); the TCM supplies an
+  individually-switched +12V feed to each.
+- Source: Jeep XJ 1993 FSM, `jeep-manual.ru` pages 294 and 323 (two separate diagnostic
+  sections, AW4-specific — Test 3A Stored DTC Test and the 4.0L AW4 diagnosis section),
+  directly quoted, mutually consistent.
+- **This matches this project's driver board exactly** (`.agents/knowledge/microcontroller/driver-boards/README.md` already switches +12V to S1/S2/SLU with a shared GND return) — no
+  wiring change needed, no OEM-pigtail polarity risk. The earlier version of this handoff's
+  "verify SLU polarity before reusing the OEM pigtail" caution can be dropped — it doesn't
+  apply to this vehicle.
+- **Important caveat to preserve in the write-up:** the Toyota A340E (same mechanical
+  transmission, different TCU) drives its lock-up solenoid the opposite way — low-side, TCU
+  grounds the pin, solenoid fed +12V from the Main EFI relay (source: MSEXTRA Megasquirt forum
+  thread, secondhand transcription of a Toyota EWD page, ~75-80% confidence, not primary). Worth
+  a short note in the knowledge base specifically warning that Toyota-side A340E wiring
+  references (MaxxECU, Megasquirt/standalone-ECU forums, etc.) are NOT reliable for solenoid
+  switching polarity on this build even though they're fine for other things (solenoid gear
+  mapping, resistance values) — AW4 and A340E are not electrically identical in this one
+  respect despite being the same mechanical unit.
+
+**What is needed from DOCUMENTATION:**
+1. Add a "Solenoid Switching Polarity" section to
+   `.agents/knowledge/jeep-xj/transmission/aw4/solenoids.md` stating: Jeep AW4 = high-side for
+   all three solenoids, common ground, confirmed from the 1993 FSM; matches this project's
+   driver board; Toyota A340E differs for SLU specifically, don't extrapolate from Toyota-side
+   sources for this one fact.
+2. Cross-reference from `.agents/knowledge/microcontroller/driver-boards/README.md` — a short
+   confirmation note (not a warning) that the shared-GND/individual-+12V topology already shown
+   in that file's wiring diagram matches the Jeep FSM for all three solenoids.
+
+**Output:** No further RESEARCH follow-up expected on this specific question — primary-source
+confirmed for the vehicle this project actually targets.
+
+---
+
 ## [DONE] — Multi-controller pivot chunk 04: generalize root CLAUDE.md/AGENTS.md project identity (sequence complete)
 
 **From:** Human operator (Sharkfac3), multi-controller-pivot sequence

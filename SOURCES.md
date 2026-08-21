@@ -306,6 +306,112 @@ Both successfully-fetched sources agree independently — treated as confirmed (
 
 ---
 
+## Stock TCU Solenoid Switching Polarity (High-Side vs Low-Side)
+
+Research session: 2026-08-19. Task: determine whether the factory A340E/AW4 TCU activates
+shift solenoids by switching +12V (high-side) or by switching ground (low-side), for
+comparison against this project's driver board (which switches +12V — see
+`.agents/knowledge/microcontroller/driver-boards/README.md`).
+
+| Source | URL | Status | Finding |
+|---|---|---|---|
+| MaxxECU A340E/A341E wiring docs | https://www.maxxecu.com/webhelp/wirings-auto_transmission-toyota_a340e_a341e.html | ✅ Read | S1/S2 solenoids wired to MaxxECU's high-side output pins with 12V flyback to transmission +12V supply — consistent with the ECU switching the positive side |
+| WebSearch synthesis (multiple forum/vendor snippets) | msextra.com, toyotanation.com, transmissionpartsdistributors.com (not individually fetched — search-engine summary only) | — | States shift solenoids are "single-wire with the case being negative" (case-grounded internally) and that driving them requires a high-side PNP driver (e.g. TIP125) — consistent with high-side/case-ground |
+| WebSearch synthesis (generic EFI/injector wiring pages) | clublexus.com, generic EFI wiring guidance (not individually fetched) | — | Describes a generic low-side injector-driver pattern (battery to one terminal, ECU grounds the other) — **not clearly specific to the A340E/AW4 solenoids**, likely a generic EFI answer surfaced by the search, lower confidence |
+| toyotanation.com thread | https://www.toyotanation.com/threads/a340e-solenoid-control-wires.1090793/ | ❌ Redirected to unverified domain `tollbit.toyotanation.com` — not followed | New blocker, log below |
+| pirate4x4.com AW4 FAQ thread | https://www.pirate4x4.com/threads/a340-transmission-issues-and-faqs.587521/ | ❌ Redirected to unverified domain `tollbit.pirate4x4.com` — not followed | New blocker, log below |
+| PCS TCM-4103 Toyota A340E harness drawing PDF | https://powertraincontrolsolutions.com/download/Released/Public/Harness_Drawings/TCM-4103%20Toyota-Lexus%20A340E%20(All).pdf | ❌ Fetched but binary/corrupted — not text-extractable by tool | — |
+
+**Working conclusion (medium confidence, not primary-source-confirmed):** the stock A340E/AW4
+TCU most likely uses **high-side switching** — solenoids are single-wire, internally
+case-grounded to the transmission housing, and the TCU applies +12V to activate. This is also
+consistent with widely-repeated transmission-repair-community practice of testing solenoid
+resistance by probing the signal pin to the case/housing (only meaningful if the case is the
+permanent ground return). If true, **this project's driver board uses the same polarity as the
+factory TCU**, not the inverse.
+
+**This is a reversal of an earlier assumption stated to the user in-conversation (that stock
+was low-side/grounding).** No primary source (FSM, ATSG manual page, or OEM pinout table) has
+directly confirmed solenoid case-ground wiring — flagging as unverified pending a primary
+source. See new HANDOFFS entry.
+
+### Update (2026-08-20) — msextra.com now fetchable; polarity confirmed per-solenoid, not uniform
+
+Prior known-blockers.md entry marked `msextra.com` as 403-blocked. Retested this session —
+the thread fetched successfully (direct WebFetch, no auth wall encountered). `known-blockers.md`
+corrected accordingly.
+
+| Source | URL | Status | Finding |
+|---|---|---|---|
+| MSEXTRA "Toyota A340 control" thread (Megasquirt standalone-ECU build thread, extensive multi-page technical discussion) | https://www.msextra.com/forums/viewtopic.php?t=57676 (and `&start=0`, `&start=90`, `&start=120`) | ✅ Read | Direct-quoted ECU pin function text: **SLU (No.3 lock-up solenoid)** — "This pin is connected to Ground inside the ECU as required to turn the No.3 lock up solenoid ON... wired with one side of the solenoid connected to battery voltage (Main EFI Relay switched) and one side of the solenoid connected to this ECU pin." = **low-side** (ECU grounds SLU to activate; SLU's other terminal is a fixed +12V feed). **SLN (accumulator)** — same "connected to Ground inside the ECU" wording = **low-side**. **SLT (line pressure)** — "outputs Pulse Width Modulated (PWM) battery voltage" = **high-side** PWM. **S1/S2 (shift solenoids)** — "Solenoid 1 has ground in the transmission and 12v active high in 1st and 2nd gear" (S2 described the same way for its gear range) = **high-side** (solenoid's ground is a fixed point inside the transmission/harness; ECU applies +12V active-high to activate). Thread also separately notes forum builders use P-channel FETs (high-side drivers) specifically for SS1/SS2, consistent with this. |
+
+**Revised conclusion (supersedes the medium-confidence "uniform high-side" theory above):**
+the stock A340E/AW4 TCU does **not** use one polarity for all solenoids — it's per-solenoid:
+- **S1 / S2 (shift solenoids)** — **high-side**: solenoid case/harness-grounded, TCU applies +12V. This matches this project's driver board (`.agents/knowledge/microcontroller/driver-boards/README.md`), which also switches +12V into S1/S2 with the coil's other side tied to GND.
+- **SLU (lock-up)** — **low-side**: solenoid's other terminal is a fixed +12V feed, TCU grounds the pin to activate. This project's driver board currently wires SLU identically to S1/S2 (driver switches +12V, coil returns to GND) — **the opposite of the stock TCU's SLU polarity**. Functionally this project's driver board still works (it's not attached to the OEM TCU, it drives its own known-polarity solenoid wiring), but if the OEM transmission harness's SLU pigtail has a hard-wired +12V feed on one leg (matching the stock ECU's low-side design) rather than a case-ground, wiring this project's high-side output straight into that harness leg would short +12V to +12V and never energize the solenoid via GND return as expected — worth flagging to DOCUMENTATION/human before final harness wiring.
+
+**Confidence:** High for the S1/S2 vs. SLU *split* — cross-referenced across three separate
+fetches of the same thread with consistent, directly-quoted ECU pin wording, and independently
+corroborated by the P-channel-FET (high-side) detail for SS1/SS2. Still not an official Toyota
+FSM/OEM pinout table — if a primary Toyota source ever surfaces, prefer it over this forum
+source for final confirmation.
+
+### Update (2026-08-20, same session) — attempted second independent source; found EWD attribution, hit new tollbit blockers
+
+Tried clublexus.com, mikestrawbridge.com, naxja.org, supraforums.com, and a second
+toyotanation.com thread to find a source independent of the msextra thread.
+
+| Source | URL | Status | Finding |
+|---|---|---|---|
+| ClubLexus A340E solenoid/wiring thread | clublexus.com/forums/.../1041565-... | ✅ Read | Only relevant detail: "solenoids appear to be grounded through the transmission housing, they don't have a dedicated ground wire" — consistent with S1/S2 case-ground, no polarity detail beyond that |
+| Mike Strawbridge AW4 Troubleshooting blog | mikestrawbridge.com/blog/2011/09/aw4-troubleshooting/ | ❌ TLS cert expired, not fetchable | — |
+| NAXJA "AW4 wiring" thread | naxja.org/threads/aw4-wiring.1087520/ | ✅ Read | Manual-conversion thread, no factory TCU polarity info; not useful |
+| Supra Forums "A340 solenoids short life span" | supraforums.com/threads/a340-solenoids-short-life-span.1123502/ | ❌ Redirects (307) to unverified `tollbit.supraforums.com` — not followed | New blocker, logged in known-blockers.md |
+| Toyotanation "Manual control of A340 torque converter lockup" (different thread from the one already logged as blocked) | toyotanation.com/forum/60-t-100-forum/377226-... | ❌ Redirects (307) to `tollbit.toyotanation.com` — not followed | Confirms tollbit gate applies site-wide on toyotanation, not just the one previously-tried thread |
+| WebSearch synthesis surfacing EWD-sourced circuit trace | search snippets referencing the same msextra thread content | — | Search-engine synthesis explicitly labeled the underlying content as an **EWD (Electrical Wiring Diagram)** circuit trace: "current flows from the EFI main relay through terminal 2 of ECT solenoids to terminal 5, then to terminal (b) 14 of the ECU to ground... for lock-up," plus No.3 (lock-up) solenoid wire color (Yellow-Black) and coil resistance (~13Ω). This is consistent with a forum poster transcribing an actual Toyota factory EWD page rather than describing their own custom wiring — raises confidence that the low-side-SLU finding traces to a primary source, but the EWD page itself has not been directly read by this tool. |
+
+**Revised confidence: ~75–80%** (up from the earlier ~65–75% medium-confidence figure) for the
+S1/S2-high-side / SLU-low-side split *on the Toyota A340E specifically*. Not raised further
+because: (1) still no direct read of the EWD page itself, only forum transcription of it; (2)
+every other candidate independent source either had no polarity detail or is tollbit-walled
+(toyotanation — both threads tried, pirate4x4, supraforums — three separate domains now, same
+gate). **Superseded for the Jeep AW4 case by the primary-source finding below — the A340E
+finding is Toyota-ECU-specific and does not transfer to the Jeep TCM.**
+
+### Correction (2026-08-20, same session) — Jeep AW4 FSM contradicts the Toyota A340E finding; do not conflate the two vehicles
+
+User pushed back on an in-conversation claim that SLU is PWM (it is not — see existing
+`aw4/solenoids.md` "Digital ON/OFF" fact, confirmed independently, this was an assistant error
+mixing up SLU with SLN/SLT). That prompted a closer look at whether the Jeep AW4's TCM might
+differ electrically from the Toyota A340E's ECU despite the mechanically-identical transmission
+— it does, at least for the lock-up solenoid.
+
+| Source | URL | Status | Finding |
+|---|---|---|---|
+| Jeep XJ 1993 FSM — AUTO TRANS DIAGNOSIS - AW4 (Test 3A, Stored DTC Test, step 41) | https://jeep-manual.ru/index.php?page=294 | ✅ Read | **"All solenoid circuits are in the same harness and a common ground wire is used for the solenoids."** Fault-isolation logic: "If all 3 solenoid faults are present, repair the Black wire (Cherokee) ground wire open condition" — a single shared ground serves S1, S2, **and the lock-up solenoid**, confirming individually-switched +12V per solenoid from the TCM = **high-side for all three on the Jeep AW4**, including lock-up. |
+| Jeep XJ 1993 FSM — AUTO TRANS DIAGNOSIS 4.0L Models w/AW4 | https://jeep-manual.ru/index.php?page=323 | ✅ Read | Same common-ground-wire statement, plus valve-body operating description ("When No. 1 and 2 valve body solenoids are energized, plunger moves from seat... When de-energized, plunger closes the drain port") and the black-ground-wire diagnostic test — consistent with page 294, independently corroborating within the same FSM (two different diagnostic sections, same underlying fact). |
+
+**This is a genuine primary source** — the actual 1993 Jeep XJ factory service manual, not a
+forum, not a Toyota-side document. It directly contradicts the Toyota A340E/msextra finding
+(TCU grounds SLU, solenoid fed +12V from Main EFI relay = low-side) for the lock-up solenoid
+specifically. **Conclusion: the Jeep AW4 TCM and the Toyota A340E ECU drive the lock-up
+solenoid with opposite polarity**, despite sharing the same mechanical transmission. S1/S2
+remain high-side on both vehicles (no contradiction there); SLU is where the two diverge.
+
+**Practical effect on this project:** this project targets the Jeep AW4, so the **Jeep FSM
+governs, not the Toyota A340E documentation**. This project's driver board (switches +12V to
+S1/S2/SLU, shared GND return per `.agents/knowledge/microcontroller/driver-boards/README.md`)
+**matches the Jeep FSM exactly** for all three solenoids. The earlier "possible SLU
+polarity mismatch" warning in the HANDOFFS entry above was based on the Toyota-side finding and
+does not apply to this build — retracting that specific risk, see updated HANDOFFS resolution.
+
+**Confidence: high (~90%+)** for the Jeep-specific S1/S2/SLU-all-high-side, common-ground
+conclusion — genuine OEM FSM primary source, cross-referenced across two separate diagnostic
+sections of the same manual. Not 100% only because the FSM text was read via the fetch tool's
+extraction rather than a saved/verified page image, and no second independent Jeep-side source
+was checked (Novak Guide had no technical detail; Montana Fab PDF not re-checked for this
+specific point this session).
+
 ## Key Findings Summary
 
 | Decision | Source |

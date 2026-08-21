@@ -14,9 +14,13 @@ These domains consistently return 403 for unauthenticated access:
 | `cherokeeforum.com` | NSS bypass wiring diagram thread | Human fetch required |
 | `rusefi.com` | A340 controller forum thread | Human fetch required |
 | `yotatech.com` | A340 Arduino paddle shift build thread | Human fetch required |
-| `msextra.com` | A340 PRND21 wiring thread | Human fetch required |
+| ~~`msextra.com`~~ | ~~A340 PRND21 wiring thread~~ | **Corrected 2026-08-20: no longer blocked.** Retested during solenoid-polarity research — `viewtopic.php?t=57676` (and paginated `&start=N` variants) fetch fine, no 403/auth wall. Do not skip this domain going forward. |
 | `waveshare.com` | 1.5" RGB OLED wiki | Human fetch required |
 | `speeduino.com/forum` | ATC discussion thread | Human fetch required |
+| `toyotanation.com` | A340E solenoid control wires thread | Redirects (307) to `tollbit.toyotanation.com` — unverified third-party domain, not followed by tool policy. Human fetch required. |
+| `pirate4x4.com` | A340/AW4 transmission FAQ thread | Redirects (307) to `tollbit.pirate4x4.com` — unverified third-party domain, not followed by tool policy. Human fetch required. |
+| `supraforums.com` | A340 solenoids short life span thread | Redirects (307) to `tollbit.supraforums.com` — same pattern as toyotanation/pirate4x4. Human fetch required. |
+| `toyotanation.com` (confirmed site-wide, not just one thread) | Second thread tried: "Manual control of A340 transmission torque converter lockup" (`/forum/60-t-100-forum/377226-...`) | Also redirects (307) to `tollbit.toyotanation.com` — confirms the tollbit gate is site-wide, not thread-specific. Human fetch required. |
 
 ---
 

@@ -34,8 +34,8 @@ selected gear: `int currentGear` (1–5) declared in `ArduinoCode.ino`.
 
 | Pin | Direction | Mode | Connected to |
 |---|---|---|---|
-| 2 | INPUT | plain INPUT — sensor drives line, tab-in-slot-at-rest = HIGH | Shift Up IR slot optocoupler DO |
-| 3 | INPUT | plain INPUT — sensor drives line, tab-in-slot-at-rest = HIGH | Shift Down IR slot optocoupler DO |
+| 2 | INPUT | plain INPUT — sensor drives line, tab-in-slot-at-rest = LOW | Shift Up IR slot optocoupler DO |
+| 3 | INPUT | plain INPUT — sensor drives line, tab-in-slot-at-rest = LOW | Shift Down IR slot optocoupler DO |
 | 4 | INPUT | INPUT_PULLUP active LOW | NSS pin B (B↔C — Park/Neutral) → GND |
 | 5 | INPUT | INPUT_PULLUP active LOW | NSS pin E (A↔E — Reverse) → GND |
 | 6 | INPUT | INPUT_PULLUP active LOW | NSS pin G (A↔G — 3rd hold) → GND |
@@ -154,7 +154,9 @@ active before Neutral — no gear is lost.
 All inputs use 50ms timestamp-based debounce (non-blocking).
 NSS pins (4–7) are `INPUT_PULLUP`. Paddle sensor pins (2–3) are plain `INPUT` —
 the IR slot optocoupler drives its own output, INPUT_PULLUP would fight it.
-All triggers fire on falling edge (HIGH→LOW = active/pressed).
+NSS triggers fire on falling edge (HIGH→LOW = active/pressed). Paddle sensors
+fire on **rising** edge (LOW→HIGH = active/pressed) — confirmed by multimeter
+on bench hardware 2026-08-20, opposite of the original 2026-08-17 assumption.
 
 ---
 

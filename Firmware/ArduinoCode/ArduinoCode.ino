@@ -38,8 +38,9 @@
 // === PADDLE SENSORS (IR slot optocoupler, LM393 — NOT mechanical switches) ===
 //   Pin 2 → Shift Up   (plain INPUT — sensor output is actively driven, no INPUT_PULLUP)
 //   Pin 3 → Shift Down (plain INPUT — sensor output is actively driven, no INPUT_PULLUP)
-//   Metal tab sits IN the sensor slot at rest (DO = HIGH). Paddle pull clears
-//   the tab (DO = LOW) — same HIGH->LOW falling edge the debounce logic expects.
+//   Metal tab sits IN the sensor slot at rest (DO = LOW). Paddle pull clears
+//   the tab (DO = HIGH) — LOW->HIGH rising edge triggers the debounce logic.
+//   Confirmed by multimeter on bench hardware 2026-08-20 (0V rest / 4.3V pulled).
 //   Source: SOURCES.md "Paddle Trigger Sensor — IR Slot-Type Optocoupler (LM393)".
 //
 // === SOLENOID OUTPUTS (via relay/driver board — NOT direct) ===
@@ -110,7 +111,7 @@ int currentGear = 1;
 // =============================================================================
 void setup() {
     Serial.begin(9600);
-    Serial.println("AW4 Controller — Starting up");
+    Serial.println("AW4 Controller — Starting up - flashed");
 
     paddle.begin();
     selector.begin();

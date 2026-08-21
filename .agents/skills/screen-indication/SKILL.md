@@ -18,6 +18,9 @@ character or short string.
   `Adafruit_SSD1351` library resolves these automatically for whichever board the sketch is
   compiled for.
 - CS, DC, RST are user-assigned digital output pins (currently A5, A4, A3 in ArduinoCode.ino) — identical on both boards
+- **RES vs RST labeling:** Some display boards silkscreen this pin "RST" instead of "RES" —
+  same signal, no functional difference. Do not assume a different display variant just
+  because the physical board says RST while docs say RES.
 
 | Display Pin | Uno Pin | Mega Pin | Notes |
 |---|---|---|---|
